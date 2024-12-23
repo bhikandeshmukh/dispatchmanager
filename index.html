@@ -32,6 +32,7 @@
             font-size: 16px;
             font-weight: bold;
             margin-bottom: 5px;
+            display: block;
         }
         select, input {
             width: 100%;
@@ -238,4 +239,15 @@
         }
 
         // Download data as XLSX
-        document.getElementById('download-btn').addEventListener('click
+        document.getElementById('download-btn').addEventListener('click', function() {
+            const ws = XLSX.utils.json_to_sheet(data);
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, "Dispatch Data");
+            XLSX.writeFile(wb, "dispatch_data.xlsx");
+        });
+
+        // Initialize the barcode scanner when the page loads
+        window.addEventListener('load', initBarcodeScanner);
+    </script>
+</body>
+</html>
