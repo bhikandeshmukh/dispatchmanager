@@ -79,6 +79,8 @@
             width: 100%;
             max-width: 500px;
             height: auto;
+            border: 1px solid #ddd;
+            margin: auto;
         }
     </style>
 </head>
@@ -123,16 +125,13 @@
 
         <div class="form-group">
             <label for="tracking-id">Enter Tracking ID:</label>
-            <input type="text" id="tracking-id" placeholder="Scan/Enter Tracking ID">
+            <input type="text" id="tracking-id" placeholder="Scan/Enter Tracking ID" readonly>
         </div>
-
-        <button id="scan-btn">Scan Barcode</button>
-        <button id="save-btn">Save Data</button>
 
         <div id="scanner-container">
             <h3>Scan Barcode Using Camera</h3>
             <video id="scanner" autoplay></video>
-            <p id="scanner-status">Click "Scan Barcode" to start scanning.</p>
+            <p id="scanner-status">Initializing camera...</p>
         </div>
 
         <div class="table-container">
@@ -160,6 +159,12 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.1/xlsx.full.min.js"></script>
     <script>
         let data = [];
+
+        // Play beep sound
+        function playBeep() {
+            const audio = new Audio('https://www.soundjay.com/button/beep-07.wav');
+            audio.play();
+        }
 
         // Initialize Quagga for barcode scanning
         function initBarcodeScanner() {
@@ -189,22 +194,16 @@
             Quagga.onDetected(function(result) {
                 const barcode = result.codeResult.code;
                 document.getElementById('tracking-id').value = barcode; // Set scanned barcode in tracking ID field
-                Quagga.stop(); // Stop scanner after detection
-                document.getElementById('scanner-status').innerText = 'Barcode scanned: ' + barcode;
+                playBeep();
+                saveData(barcode);
             });
         }
 
-        // Start scanning when "Scan Barcode" button is clicked
-        document.getElementById('scan-btn').addEventListener('click', function() {
-            initBarcodeScanner();
-        });
-
-        // Save the data and update the table
-        document.getElementById('save-btn').addEventListener('click', function() {
+        // Save the scanned data and update the table
+        function saveData(trackingId) {
             const portal = document.getElementById('portal').value;
             const courier = document.getElementById('courier').value;
             const dispatch = document.getElementById('dispatch').value;
-            const trackingId = document.getElementById('tracking-id').value;
 
             if (!portal || !courier || !dispatch || !trackingId) {
                 alert('Please fill all fields.');
@@ -221,9 +220,7 @@
 
             data.push(newEntry);
             updateTable();
-            document.getElementById('tracking-id').value = ''; // Clear input after save
-            document.getElementById('scanner-status').innerText = 'Click "Scan Barcode" to scan again.';
-        });
+        }
 
         // Update the table with new data
         function updateTable() {
@@ -241,13 +238,4 @@
         }
 
         // Download data as XLSX
-        document.getElementById('download-btn').addEventListener('click', function() {
-            const ws = XLSX.utils.json_to_sheet(data);
-            const wb = XLSX.utils.book_new();
-            XLSX.utils.book_append_sheet(wb, ws, "Dispatch Data");
-            XLSX.writeFile(wb, "dispatch_data.xlsx");
-        });
-    </script>
-
-</body>
-</html>
+        document.getElementById('download-btn').addEventListener('click
