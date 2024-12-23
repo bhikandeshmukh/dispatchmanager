@@ -4,22 +4,24 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dispatch Manager with Barcode Scanner</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #f4f4f9;
             margin: 0;
             padding: 0;
+            background-color: #f4f4f9;
         }
         .container {
-            max-width: 800px;
-            margin: 20px auto;
-            background: #fff;
+            width: 90%;
+            margin: auto;
             padding: 20px;
-            border-radius: 10px;
+            background-color: white;
+            border-radius: 8px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-top: 30px;
         }
-        h1, h3 {
+        h1, h2, h3 {
             text-align: center;
             color: #333;
         }
@@ -27,58 +29,66 @@
             margin-bottom: 15px;
         }
         .form-group label {
-            display: block;
+            font-size: 16px;
             font-weight: bold;
             margin-bottom: 5px;
+            display: block;
         }
-        .form-group select, .form-group input {
+        select, input {
             width: 100%;
             padding: 8px;
             font-size: 14px;
-            border: 1px solid #ddd;
+            margin-top: 5px;
             border-radius: 4px;
+            border: 1px solid #ddd;
         }
         button {
-            width: 100%;
-            padding: 10px;
-            background: #28a745;
-            color: #fff;
+            padding: 10px 15px;
+            background-color: #28a745;
+            color: white;
+            font-size: 16px;
             border: none;
             border-radius: 5px;
-            font-size: 16px;
             cursor: pointer;
-            margin-top: 10px;
+            width: 100%;
+            margin-top: 20px;
         }
         button:hover {
-            background: #218838;
+            background-color: #218838;
         }
-        #scanner {
-            width: 100%;
-            border: 2px solid #ddd;
-            border-radius: 5px;
-            margin: 20px 0;
+        .table-container {
+            margin-top: 20px;
+            overflow-x: auto;
         }
         table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 20px;
         }
         th, td {
-            border: 1px solid #ddd;
-            padding: 8px;
+            padding: 8px 12px;
             text-align: left;
+            border-bottom: 1px solid #ddd;
         }
         th {
-            background-color: #f4f4f9;
+            background-color: #f2f2f2;
+        }
+        #scanner-container {
+            margin-top: 20px;
+            text-align: center;
+        }
+        #scanner {
+            width: 100%;
+            max-width: 500px;
+            height: auto;
+            border: 2px solid #ccc;
+            border-radius: 5px;
         }
     </style>
 </head>
 <body>
-
     <div class="container">
         <h1>Dispatch Manager</h1>
 
-        <!-- Form Section -->
         <div class="form-group">
             <label for="portal">Select Portal:</label>
             <select id="portal">
@@ -86,9 +96,11 @@
                 <option value="Myntra">Myntra</option>
                 <option value="Meesho">Meesho</option>
                 <option value="Amazon">Amazon</option>
+                <option value="Amazon Flex">Amazon Flex</option>
                 <option value="Snapdeal">Snapdeal</option>
             </select>
         </div>
+
         <div class="form-group">
             <label for="courier">Select Courier:</label>
             <select id="courier">
@@ -97,8 +109,11 @@
                 <option value="Delhivery">Delhivery</option>
                 <option value="Xpressbees">Xpressbees</option>
                 <option value="Ecom Express">Ecom Express</option>
+                <option value="ATS">ATS</option>
+                <option value="BlueDart">BlueDart</option>
             </select>
         </div>
+
         <div class="form-group">
             <label for="dispatch">Select Dispatch Type:</label>
             <select id="dispatch">
@@ -107,6 +122,7 @@
                 <option value="Cancel">Cancel</option>
             </select>
         </div>
+
         <div class="form-group">
             <label for="tracking-id">Enter/Scan Tracking ID:</label>
             <input type="text" id="tracking-id" placeholder="Scan or Enter Tracking ID">
@@ -114,38 +130,42 @@
 
         <button id="save-btn">Save Data</button>
 
-        <!-- Scanner -->
-        <h3>Scan Barcode Using Camera</h3>
-        <video id="scanner" autoplay></video>
+        <div id="scanner-container">
+            <h3>Scan Barcode Using Camera</h3>
+            <video id="scanner" autoplay></video>
+        </div>
 
-        <!-- Data Table -->
-        <table>
-            <thead>
-                <tr>
-                    <th>Date</th>
-                    <th>Portal</th>
-                    <th>Dispatch Type</th>
-                    <th>Tracking ID</th>
-                    <th>Courier</th>
-                </tr>
-            </thead>
-            <tbody id="data-table"></tbody>
-        </table>
+        <div class="table-container">
+            <h2>Live Scanned Data:</h2>
+            <table id="data-table">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Portal</th>
+                        <th>Dispatch Type</th>
+                        <th>Tracking ID</th>
+                        <th>Courier</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Data will be populated here -->
+                </tbody>
+            </table>
+        </div>
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/quagga/0.12.1/quagga.min.js"></script>
     <script>
         let data = [];
 
-        // Initialize Quagga
-        function initScanner() {
+        function initBarcodeScanner() {
             Quagga.init({
                 inputStream: {
                     name: "Live",
                     type: "LiveStream",
                     target: document.querySelector('#scanner'),
                     constraints: {
-                        facingMode: "environment", // Rear camera
+                        facingMode: "environment",
                     },
                 },
                 decoder: {
@@ -153,26 +173,25 @@
                 },
             }, function(err) {
                 if (err) {
-                    console.error("Quagga initialization failed: ", err);
-                    alert("Camera access failed. Ensure permissions are granted and reload the page.");
+                    console.error("Quagga initialization error:", err);
+                    alert("Camera access failed. Please check permissions.");
                     return;
                 }
                 Quagga.start();
             });
 
-            // Handle successful barcode detection
             Quagga.onDetected(function(result) {
                 const barcode = result.codeResult.code;
-                document.getElementById('tracking-id').value = barcode; // Fill tracking ID field
+                document.getElementById('tracking-id').value = barcode;
                 alert(`Barcode detected: ${barcode}`);
-                Quagga.stop(); // Stop scanner after detection
+                Quagga.stop(); // Stop scanning after detection
             });
         }
 
-        // Start Scanner on Page Load
-        window.addEventListener('load', initScanner);
+        window.onload = function() {
+            initBarcodeScanner();
+        };
 
-        // Save Data
         document.getElementById('save-btn').addEventListener('click', function() {
             const portal = document.getElementById('portal').value;
             const courier = document.getElementById('courier').value;
@@ -180,40 +199,37 @@
             const trackingId = document.getElementById('tracking-id').value;
 
             if (!portal || !courier || !dispatch || !trackingId) {
-                alert("Please fill all fields.");
+                alert('Please fill all fields.');
                 return;
             }
 
-            const entry = {
-                date: new Date().toLocaleString(),
-                portal,
-                dispatch,
-                trackingId,
-                courier,
+            const newEntry = {
+                date: new Date().toLocaleDateString(),
+                portal: portal,
+                dispatchType: dispatch,
+                trackingId: trackingId,
+                courier: courier
             };
 
-            data.push(entry);
+            data.push(newEntry);
             updateTable();
-            document.getElementById('tracking-id').value = ""; // Clear input
+            document.getElementById('tracking-id').value = ''; // Clear input field
+            Quagga.start(); // Restart scanner after saving data
         });
 
-        // Update Table
         function updateTable() {
-            const tableBody = document.getElementById('data-table');
-            tableBody.innerHTML = ""; // Clear table
+            const tableBody = document.getElementById('data-table').getElementsByTagName('tbody')[0];
+            tableBody.innerHTML = '';
 
-            data.forEach((entry) => {
+            data.forEach(entry => {
                 const row = tableBody.insertRow();
-                row.innerHTML = `
-                    <td>${entry.date}</td>
-                    <td>${entry.portal}</td>
-                    <td>${entry.dispatch}</td>
-                    <td>${entry.trackingId}</td>
-                    <td>${entry.courier}</td>
-                `;
+                row.insertCell(0).innerText = entry.date;
+                row.insertCell(1).innerText = entry.portal;
+                row.insertCell(2).innerText = entry.dispatchType;
+                row.insertCell(3).innerText = entry.trackingId;
+                row.insertCell(4).innerText = entry.courier;
             });
         }
     </script>
-
 </body>
 </html>
