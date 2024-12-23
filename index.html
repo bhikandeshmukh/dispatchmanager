@@ -126,13 +126,13 @@
             <input type="text" id="tracking-id" placeholder="Scan/Enter Tracking ID">
         </div>
 
+        <button id="scan-btn">Scan Barcode</button>
         <button id="save-btn">Save Data</button>
 
-        <!-- Barcode Scanner Container -->
         <div id="scanner-container">
             <h3>Scan Barcode Using Camera</h3>
             <video id="scanner" autoplay></video>
-            <p id="scanner-status">Please allow camera access to scan barcodes.</p>
+            <p id="scanner-status">Click "Scan Barcode" to start scanning.</p>
         </div>
 
         <div class="table-container">
@@ -173,7 +173,7 @@
                     },
                 },
                 decoder: {
-                    readers: ["code_128_reader", "ean_reader", "ean_8_reader", "code_39_reader", "upc_reader", "code_25_reader", "code_25_reader", "code_39_vin_reader", "codabar_reader", "upc_e_reader", "i2of5_reader", "2of5_reader", "code_93_reader"],
+                    readers: ["code_128_reader", "ean_reader", "ean_8_reader"],
                 },
             }, function(err) {
                 if (err) {
@@ -194,10 +194,10 @@
             });
         }
 
-        // Start barcode scanning when the page is ready
-        window.onload = function() {
+        // Start scanning when "Scan Barcode" button is clicked
+        document.getElementById('scan-btn').addEventListener('click', function() {
             initBarcodeScanner();
-        };
+        });
 
         // Save the data and update the table
         document.getElementById('save-btn').addEventListener('click', function() {
@@ -222,8 +222,7 @@
             data.push(newEntry);
             updateTable();
             document.getElementById('tracking-id').value = ''; // Clear input after save
-            document.getElementById('scanner-status').innerText = 'Camera is ready to scan barcodes.';
-            Quagga.start(); // Restart scanner after saving data
+            document.getElementById('scanner-status').innerText = 'Click "Scan Barcode" to scan again.';
         });
 
         // Update the table with new data
