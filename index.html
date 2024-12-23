@@ -56,6 +56,22 @@
         button:hover {
             background-color: #218838;
         }
+        .table-container {
+            margin-top: 20px;
+            overflow-x: auto;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 8px 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
         #scanner-container {
             margin-top: 20px;
             text-align: center;
@@ -126,6 +142,24 @@
 
         <div id="warning"></div>
 
+        <div class="table-container">
+            <h2>Live Scanned Data:</h2>
+            <table id="data-table">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Portal</th>
+                        <th>Dispatch Type</th>
+                        <th>Tracking ID</th>
+                        <th>Courier</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Data will be populated here -->
+                </tbody>
+            </table>
+        </div>
+
         <button id="download-btn">Download as XLSX</button>
     </div>
 
@@ -133,8 +167,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.1/xlsx.full.min.js"></script>
     <script>
         let data = [];
-        let lastScannedCode = '';
-        let scanTimeout;
 
         // Play beep sound
         function playBeep() {
@@ -156,8 +188,6 @@
                 decoder: {
                     readers: ["code_128_reader", "ean_reader", "ean_8_reader"],
                 },
-                locate: true,
-                frequency: 1
             }, function(err) {
                 if (err) {
                     console.log(err);
@@ -170,16 +200,10 @@
 
             // Event listener for barcode found
             Quagga.onDetected(function(result) {
-                clearTimeout(scanTimeout);
-                scanTimeout = setTimeout(() => {
-                    const barcode = result.codeResult.code;
-                    if (barcode !== lastScannedCode) {
-                        lastScannedCode = barcode;
-                        document.getElementById('tracking-id').value = barcode; // Set scanned barcode in tracking ID field
-                        playBeep();
-                        saveData(barcode);
-                    }
-                }, 500); // Adjust delay as needed to ensure stable scan
+                const barcode = result.codeResult.code;
+                document.getElementById('tracking-id').value = barcode; // Set scanned barcode in tracking ID field
+                playBeep();
+                saveData(barcode);
             });
         }
 
@@ -212,6 +236,22 @@
             };
 
             data.push(newEntry);
+            updateTable();
+        }
+
+        // Update the table with new data
+        function updateTable() {
+            const tableBody = document.getElementById('data-table').getElementsByTagName('tbody')[0];
+            tableBody.innerHTML = ''; // Clear existing table data
+
+            data.forEach((entry, index) => {
+                const row = tableBody.insertRow();
+                row.insertCell(0).innerText = entry.date;
+                row.insertCell(1).innerText = entry.portal;
+                row.insertCell(2).innerText = entry.dispatchType;
+                row.insertCell(3).innerText = entry.trackingId;
+                row.insertCell(4).innerText = entry.courier;
+            });
         }
 
         // Download data as XLSX
