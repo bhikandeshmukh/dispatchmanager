@@ -138,7 +138,7 @@
             <h3>Scan Barcode Using Camera</h3> 
             <video id="scanner" autoplay></video>
             <p id="scanner-status">Initializing camera...</p>
-            <button id="scan-btn">Scan</button>
+            <button id="scan-btn">Scan Name</button>
         </div>
 
         <div id="warning"></div>
@@ -202,14 +202,17 @@
             // Event listener for barcode found
             Quagga.onDetected(function(result) {
                 const barcode = result.codeResult.code;
-                document.getElementById('tracking-id').value = barcode; // Set scanned barcode in tracking ID field
-                playBeep();
-                saveData(barcode);
+                // Ensure the detected code is a valid barcode
+                if (result.codeResult.format === 'code_128' || result.codeResult.format === 'ean_13' || result.codeResult.format === 'ean_8') {
+                    document.getElementById('tracking-id').value = barcode; // Set scanned barcode in tracking ID field
+                    saveData(barcode);
+                }
             });
         }
 
         // Event listener for the scan button
         document.getElementById('scan-btn').addEventListener('click', function() {
+            playBeep();
             initBarcodeScanner();
         });
 
