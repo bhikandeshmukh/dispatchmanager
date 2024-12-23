@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dispatch Manager with Barcode Scanner</title>
+    <title>Dispatch Manager by Bhikan Deshmukh</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <style>
         body {
@@ -13,7 +13,7 @@
             background-color: #f4f4f9;
         }
         .container {
-            width: 90%;
+            width: 80%;
             margin: auto;
             padding: 20px;
             background-color: white;
@@ -79,12 +79,11 @@
             width: 100%;
             max-width: 500px;
             height: auto;
-            border: 2px solid #ccc;
-            border-radius: 5px;
         }
     </style>
 </head>
 <body>
+
     <div class="container">
         <h1>Dispatch Manager</h1>
 
@@ -123,12 +122,13 @@
         </div>
 
         <div class="form-group">
-            <label for="tracking-id">Enter/Scan Tracking ID:</label>
-            <input type="text" id="tracking-id" placeholder="Scan or Enter Tracking ID">
+            <label for="tracking-id">Enter Tracking ID:</label>
+            <input type="text" id="tracking-id" placeholder="Scan/Enter Tracking ID">
         </div>
 
         <button id="save-btn">Save Data</button>
 
+        <!-- Barcode Scanner Container -->
         <div id="scanner-container">
             <h3>Scan Barcode Using Camera</h3>
             <video id="scanner" autoplay></video>
@@ -151,12 +151,16 @@
                 </tbody>
             </table>
         </div>
+
+        <button id="download-btn">Download as XLSX</button>
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/quagga/0.12.1/quagga.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.1/xlsx.full.min.js"></script>
     <script>
         let data = [];
 
+        // Initialize Quagga for barcode scanning
         function initBarcodeScanner() {
             Quagga.init({
                 inputStream: {
@@ -164,7 +168,7 @@
                     type: "LiveStream",
                     target: document.querySelector('#scanner'),
                     constraints: {
-                        facingMode: "environment",
+                        facingMode: "environment", // Use rear camera
                     },
                 },
                 decoder: {
@@ -172,25 +176,26 @@
                 },
             }, function(err) {
                 if (err) {
-                    console.error("Quagga initialization error:", err);
-                    alert("Camera access failed. Please check permissions.");
+                    console.log(err);
                     return;
                 }
                 Quagga.start();
             });
 
+            // Event listener for barcode found
             Quagga.onDetected(function(result) {
                 const barcode = result.codeResult.code;
-                document.getElementById('tracking-id').value = barcode;
-                alert(`Barcode detected: ${barcode}`);
-                Quagga.stop(); // Stop scanning after detection
+                document.getElementById('tracking-id').value = barcode; // Set scanned barcode in tracking ID field
+                Quagga.stop(); // Stop scanner after detection
             });
         }
 
+        // Start barcode scanning when the page is ready
         window.onload = function() {
             initBarcodeScanner();
         };
 
+        // Save the data and update the table
         document.getElementById('save-btn').addEventListener('click', function() {
             const portal = document.getElementById('portal').value;
             const courier = document.getElementById('courier').value;
@@ -212,14 +217,15 @@
 
             data.push(newEntry);
             updateTable();
-            document.getElementById('tracking-id').value = ''; // Clear input field
+            document.getElementById('tracking-id').value = ''; // Clear input after save
         });
 
+        // Update the table with new data
         function updateTable() {
             const tableBody = document.getElementById('data-table').getElementsByTagName('tbody')[0];
-            tableBody.innerHTML = '';
+            tableBody.innerHTML = ''; // Clear existing table data
 
-            data.forEach(entry => {
+            data.forEach((entry, index) => {
                 const row = tableBody.insertRow();
                 row.insertCell(0).innerText = entry.date;
                 row.insertCell(1).innerText = entry.portal;
@@ -228,6 +234,15 @@
                 row.insertCell(4).innerText = entry.courier;
             });
         }
+
+        // Download data as XLSX
+        document.getElementById('download-btn').addEventListener('click', function() {
+            const ws = XLSX.utils.json_to_sheet(data);
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, "Dispatch Data");
+            XLSX.writeFile(wb, "dispatch_data.xlsx");
+        });
     </script>
+
 </body>
 </html>
