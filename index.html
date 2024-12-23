@@ -83,6 +83,11 @@
             border: 1px solid #ddd;
             margin: auto;
         }
+        #warning {
+            color: red;
+            text-align: center;
+            margin-top: 10px;
+        }
     </style>
 </head>
 <body>
@@ -134,6 +139,8 @@
             <video id="scanner" autoplay></video>
             <p id="scanner-status">Initializing camera...</p>
         </div>
+
+        <div id="warning"></div>
 
         <div class="table-container">
             <h2>Live Scanned Data:</h2>
@@ -209,6 +216,15 @@
             if (!portal || !courier || !dispatch || !trackingId) {
                 alert('Please fill all fields.');
                 return;
+            }
+
+            // Check for duplicate tracking ID
+            const existingEntry = data.find(entry => entry.trackingId === trackingId);
+            if (existingEntry) {
+                document.getElementById('warning').innerText = 'Duplicate scan detected: ' + trackingId;
+                return;
+            } else {
+                document.getElementById('warning').innerText = '';
             }
 
             const newEntry = {
