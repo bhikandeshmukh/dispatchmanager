@@ -138,6 +138,7 @@
             <h3>Scan Barcode Using Camera</h3> 
             <video id="scanner" autoplay></video>
             <p id="scanner-status">Initializing camera...</p>
+            <button id="scan-btn">Scan</button>
         </div>
 
         <div id="warning"></div>
@@ -207,6 +208,11 @@
             });
         }
 
+        // Event listener for the scan button
+        document.getElementById('scan-btn').addEventListener('click', function() {
+            initBarcodeScanner();
+        });
+
         // Save the scanned data and update the table
         function saveData(trackingId) {
             const portal = document.getElementById('portal').value;
@@ -261,9 +267,6 @@
             XLSX.utils.book_append_sheet(wb, ws, "Dispatch Data");
             XLSX.writeFile(wb, "dispatch_data.xlsx");
         });
-
-        // Initialize the barcode scanner when the page loads
-        window.addEventListener('load', initBarcodeScanner);
     </script>
 </body>
 </html>
