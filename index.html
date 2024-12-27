@@ -11,15 +11,22 @@
             margin: 0;
             padding: 0;
             background-color: #f4f4f9;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            backdrop-filter: blur(10px); /* Blur effect for the background */
         }
         .container {
             width: 90%;
             max-width: 1200px;
-            margin: 20px auto;
+            margin: 20px;
             padding: 20px;
-            background-color: white;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            background-color: rgba(255, 255, 255, 0.9); /* Semi-transparent white */
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.3); /* Light border */
+            backdrop-filter: blur(10px); /* Blur effect for the container */
         }
         h1 {
             text-align: center;
@@ -53,7 +60,7 @@
         }
         button {
             padding: 10px 15px;
-            background-color: #0084ff;
+            background-color: #28a745;
             color: white;
             font-size: 16px;
             border: none;
@@ -63,7 +70,7 @@
             margin-top: 20px;
         }
         button:hover {
-            background-color: #0084ff;
+            background-color: #218838;
         }
         .table-container {
             margin-top: 20px;
