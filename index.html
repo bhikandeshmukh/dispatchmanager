@@ -32,7 +32,6 @@
             font-size: 16px;
             font-weight: bold;
             margin-bottom: 5px;
-            display: block;
         }
         select, input {
             width: 100%;
@@ -80,13 +79,13 @@
             width: 100%;
             max-width: 500px;
             height: auto;
-            border: 1px solid #ddd;
-            margin: auto;
+            border: 2px solid #ccc;
+            border-radius: 8px;
         }
-        #warning {
+        .error-message {
             color: red;
-            text-align: center;
-            margin-top: 10px;
+            font-size: 14px;
+            margin-top: 5px;
         }
     </style>
 </head>
@@ -131,17 +130,18 @@
 
         <div class="form-group">
             <label for="tracking-id">Enter Tracking ID:</label>
-            <input type="text" id="tracking-id" placeholder="Scan/Enter Tracking ID" readonly>
+            <input type="text" id="tracking-id" placeholder="Scan/Enter Tracking ID">
+            <div id="tracking-id-error" class="error-message"></div>
         </div>
+
+        <button id="scan-btn">Scan Barcode</button>
+        <button id="save-btn">Save Data</button>
 
         <div id="scanner-container">
-            <h3>Scan Barcode Using Camera</h3> 
+            <h3>Camera Live Feed</h3>
             <video id="scanner" autoplay></video>
-            <p id="scanner-status">Initializing camera...</p>
-            <button id="scan-btn">Scan Name</button>
+            <p id="scanner-status">Camera is initializing...</p>
         </div>
-
-        <div id="warning"></div>
 
         <div class="table-container">
             <h2>Live Scanned Data:</h2>
@@ -168,12 +168,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.1/xlsx.full.min.js"></script>
     <script>
         let data = [];
-
-        // Play beep sound
-        function playBeep() {
-            const audio = new Audio('/beep.wav');
-            audio.play();
-        }
+        let isScannerActive = false;
 
         // Initialize Quagga for barcode scanning
         function initBarcodeScanner() {
@@ -191,49 +186,51 @@
                 },
             }, function(err) {
                 if (err) {
-                    console.log(err);
+                    console.error(err);
                     document.getElementById('scanner-status').innerText = 'Error accessing camera. Please try again.';
                     return;
                 }
                 Quagga.start();
-                document.getElementById('scanner-status').innerText = 'Camera is ready to scan barcodes.';
+                isScannerActive = true;
+                document.getElementById('scanner-status').innerText = 'Camera is live. Ready to scan barcodes.';
             });
 
             // Event listener for barcode found
             Quagga.onDetected(function(result) {
                 const barcode = result.codeResult.code;
-                // Ensure the detected code is a valid barcode
-                if (result.codeResult.format === 'code_128' || result.codeResult.format === 'ean_13' || result.codeResult.format === 'ean_8') {
-                    document.getElementById('tracking-id').value = barcode; // Set scanned barcode in tracking ID field
-                    saveData(barcode);
-                }
+                document.getElementById('tracking-id').value = barcode; // Set scanned barcode in tracking ID field
+                document.getElementById('scanner-status').innerText = 'Barcode scanned: ' + barcode;
             });
         }
 
-        // Event listener for the scan button
-        document.getElementById('scan-btn').addEventListener('click', function() {
-            playBeep();
+        // Start the camera feed automatically when the page loads
+        window.onload = function() {
             initBarcodeScanner();
+        };
+
+        // Toggle scanner on "Scan Barcode" button click
+        document.getElementById('scan-btn').addEventListener('click', function() {
+            if (isScannerActive) {
+                Quagga.stop();
+                isScannerActive = false;
+                document.getElementById('scanner-status').innerText = 'Scanner stopped. Click "Scan Barcode" to start again.';
+            } else {
+                initBarcodeScanner();
+            }
         });
 
-        // Save the scanned data and update the table
-        function saveData(trackingId) {
+        // Save the data and update the table
+        document.getElementById('save-btn').addEventListener('click', function() {
             const portal = document.getElementById('portal').value;
             const courier = document.getElementById('courier').value;
             const dispatch = document.getElementById('dispatch').value;
+            const trackingId = document.getElementById('tracking-id').value;
 
             if (!portal || !courier || !dispatch || !trackingId) {
-                alert('Please fill all fields.');
-                return;
-            }
-
-            // Check for duplicate tracking ID
-            const existingEntry = data.find(entry => entry.trackingId === trackingId);
-            if (existingEntry) {
-                document.getElementById('warning').innerText = 'Duplicate scan detected: ' + trackingId;
+                document.getElementById('tracking-id-error').innerText = 'Please fill all fields.';
                 return;
             } else {
-                document.getElementById('warning').innerText = '';
+                document.getElementById('tracking-id-error').innerText = '';
             }
 
             const newEntry = {
@@ -246,7 +243,9 @@
 
             data.push(newEntry);
             updateTable();
-        }
+            document.getElementById('tracking-id').value = ''; // Clear input after save
+            document.getElementById('scanner-status').innerText = 'Camera is live. Ready to scan barcodes.';
+        });
 
         // Update the table with new data
         function updateTable() {
@@ -265,11 +264,17 @@
 
         // Download data as XLSX
         document.getElementById('download-btn').addEventListener('click', function() {
+            if (data.length === 0) {
+                alert('No data to download.');
+                return;
+            }
+
             const ws = XLSX.utils.json_to_sheet(data);
             const wb = XLSX.utils.book_new();
             XLSX.utils.book_append_sheet(wb, ws, "Dispatch Data");
             XLSX.writeFile(wb, "dispatch_data.xlsx");
         });
     </script>
+
 </body>
 </html>
