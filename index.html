@@ -77,10 +77,16 @@
         }
         #scanner {
             width: 100%;
-            max-width: 500px;
+            max-width: 300px; /* Fixed size for Code 128 */
             height: auto;
             border: 2px solid #ccc;
             border-radius: 8px;
+            cursor: pointer;
+        }
+        #scanner-status {
+            font-size: 16px;
+            font-weight: bold;
+            margin-top: 10px;
         }
         .error-message {
             color: red;
@@ -134,13 +140,12 @@
             <div id="tracking-id-error" class="error-message"></div>
         </div>
 
-        <button id="scan-btn">Start Scanner</button>
         <button id="save-btn">Save Data</button>
 
         <div id="scanner-container">
             <h3>Camera Live Feed</h3>
             <video id="scanner" autoplay></video>
-            <p id="scanner-status">Camera is initializing...</p>
+            <p id="scanner-status">Scanning is stopped. Click to start scanning.</p>
         </div>
 
         <div class="table-container">
@@ -211,7 +216,8 @@
                     const video = document.getElementById('scanner');
                     video.srcObject = stream;
                     video.play();
-                    document.getElementById('scanner-status').innerText = 'Camera is live. Ready to scan barcodes.';
+                    document.getElementById('scanner-status').innerText = 'Scanning is active. Click to scan.';
+                    isScannerActive = true;
                 })
                 .catch(err => {
                     console.error(err);
@@ -231,18 +237,16 @@
                     },
                 },
                 decoder: {
-                    readers: ["code_128_reader", "ean_reader", "ean_8_reader"],
+                    readers: ["code_128_reader", "code_39_reader"], // Only Code 128 and Code 39
                 },
             }, function(err) {
                 if (err) {
                     console.error(err);
-                    document.getElementById('scanner-status').innerText = 'Error accessing camera. Please try again.';
+                    document.getElementById('scanner-status').innerText = 'Error initializing scanner.';
                     return;
                 }
                 Quagga.start();
-                isScannerActive = true;
-                document.getElementById('scanner-status').innerText = 'Camera is live. Ready to scan barcodes.';
-                document.getElementById('scan-btn').innerText = 'Stop Scanner'; // Update button text
+                document.getElementById('scanner-status').innerText = 'Scanning is active. Click to scan.';
             });
 
             // Event listener for barcode found
@@ -271,8 +275,7 @@
         function stopBarcodeScanner() {
             Quagga.stop();
             isScannerActive = false;
-            document.getElementById('scanner-status').innerText = 'Scanner stopped. Click "Start Scanner" to begin.';
-            document.getElementById('scan-btn').innerText = 'Start Scanner'; // Update button text
+            document.getElementById('scanner-status').innerText = 'Scanning is stopped. Click to start scanning.';
         }
 
         // Save the data and update the table
@@ -300,7 +303,7 @@
             data.push(newEntry);
             updateTable();
             document.getElementById('tracking-id').value = ''; // Clear input after save
-            document.getElementById('scanner-status').innerText = 'Camera is live. Ready to scan barcodes.';
+            document.getElementById('scanner-status').innerText = 'Scanning is active. Click to scan.';
         }
 
         // Update the table with new data
@@ -318,12 +321,10 @@
             });
         }
 
-        // Toggle scanner on "Scan Barcode" button click
-        document.getElementById('scan-btn').addEventListener('click', function() {
-            if (isScannerActive) {
-                stopBarcodeScanner();
-            } else {
-                enableCamera(); // Forcefully enable back camera
+        // Start scanning when camera feed is clicked
+        document.getElementById('scanner').addEventListener('click', function() {
+            if (!isScannerActive) {
+                enableCamera();
                 initBarcodeScanner();
             }
         });
