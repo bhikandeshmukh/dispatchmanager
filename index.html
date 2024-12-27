@@ -170,6 +170,21 @@
         let data = [];
         let isScannerActive = false;
 
+        // Function to forcefully enable camera access
+        function enableCamera() {
+            navigator.mediaDevices.getUserMedia({ video: true })
+                .then(stream => {
+                    const video = document.getElementById('scanner');
+                    video.srcObject = stream;
+                    video.play();
+                    document.getElementById('scanner-status').innerText = 'Camera is live. Ready to scan barcodes.';
+                })
+                .catch(err => {
+                    console.error(err);
+                    document.getElementById('scanner-status').innerText = 'Error accessing camera. Please try again.';
+                });
+        }
+
         // Initialize Quagga for barcode scanning
         function initBarcodeScanner() {
             Quagga.init({
@@ -201,6 +216,8 @@
                 const barcode = result.codeResult.code;
                 document.getElementById('tracking-id').value = barcode; // Set scanned barcode in tracking ID field
                 document.getElementById('scanner-status').innerText = 'Barcode scanned: ' + barcode;
+                stopBarcodeScanner(); // Stop scanner after detection
+                saveData(); // Automatically save data to table
             });
         }
 
@@ -212,17 +229,8 @@
             document.getElementById('scan-btn').innerText = 'Start Scanner'; // Update button text
         }
 
-        // Toggle scanner on "Scan Barcode" button click
-        document.getElementById('scan-btn').addEventListener('click', function() {
-            if (isScannerActive) {
-                stopBarcodeScanner();
-            } else {
-                initBarcodeScanner();
-            }
-        });
-
         // Save the data and update the table
-        document.getElementById('save-btn').addEventListener('click', function() {
+        function saveData() {
             const portal = document.getElementById('portal').value;
             const courier = document.getElementById('courier').value;
             const dispatch = document.getElementById('dispatch').value;
@@ -247,7 +255,7 @@
             updateTable();
             document.getElementById('tracking-id').value = ''; // Clear input after save
             document.getElementById('scanner-status').innerText = 'Camera is live. Ready to scan barcodes.';
-        });
+        }
 
         // Update the table with new data
         function updateTable() {
@@ -263,6 +271,21 @@
                 row.insertCell(4).innerText = entry.courier;
             });
         }
+
+        // Toggle scanner on "Scan Barcode" button click
+        document.getElementById('scan-btn').addEventListener('click', function() {
+            if (isScannerActive) {
+                stopBarcodeScanner();
+            } else {
+                enableCamera(); // Forcefully enable camera
+                initBarcodeScanner();
+            }
+        });
+
+        // Save data on "Save Data" button click
+        document.getElementById('save-btn').addEventListener('click', function() {
+            saveData();
+        });
 
         // Download data as XLSX
         document.getElementById('download-btn').addEventListener('click', function() {
