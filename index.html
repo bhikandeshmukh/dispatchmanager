@@ -89,8 +89,6 @@
             border: none;
             border-radius: 5px;
             cursor: pointer;
-            width: 100%;
-            margin-top: 20px;
             transition: background-color 0.3s;
         }
         button:hover {
@@ -167,6 +165,24 @@
         .select-entry {
             vertical-align: middle;
         }
+        .tracking-id-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .tracking-id-group input {
+            flex: 1;
+        }
+        .tracking-id-group button {
+            width: auto;
+            margin-top: 0;
+            align-self: center; /* Align button vertically in the middle */
+        }
+        .center-button {
+            display: flex;
+            justify-content: center;
+            margin-top: 10px;
+        }
         @media (max-width: 768px) {
             h1 {
                 font-size: 20px;
@@ -233,13 +249,12 @@
 
         <div class="form-group">
             <label for="tracking-id">Enter Tracking ID:</label>
-            <input type="text" id="tracking-id" placeholder="Scan/Enter Tracking ID">
+            <div class="tracking-id-group">
+                <input type="text" id="tracking-id" placeholder="Scan/Enter Tracking ID">
+                <button id="save-btn">Save</button>
+            </div>
             <div id="tracking-id-error" class="error-message"></div>
         </div>
-
-        <button id="save-btn">Save Data</button>
-        <button id="clear-all-btn" class="clear-all-btn">Clear All Data</button>
-        <button id="dark-mode-toggle" class="dark-mode-toggle">Toggle Dark Mode</button>
 
         <div id="scanner-container">
             <h3>Camera Live Feed</h3>
@@ -249,9 +264,11 @@
 
         <div class="table-container">
             <h2>Live Scanned Data:</h2>
-            <button id="bulk-delete-btn" class="bulk-delete-btn">
-                <i class="fas fa-trash"></i> Delete
-            </button>
+            <div class="center-button">
+                <button id="bulk-delete-btn" class="bulk-delete-btn">
+                    <i class="fas fa-trash"></i> Delete
+                </button>
+            </div>
             <table id="data-table">
                 <thead>
                     <tr>
@@ -270,6 +287,8 @@
         </div>
 
         <button id="download-btn">Download as XLSX</button>
+        <button id="clear-all-btn" class="clear-all-btn">Clear All Data</button>
+        <button id="dark-mode-toggle" class="dark-mode-toggle">Toggle Dark Mode</button>
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/quagga/0.12.1/quagga.min.js"></script>
@@ -524,6 +543,13 @@
 
         document.getElementById('save-btn').addEventListener('click', function() {
             saveData();
+        });
+
+        // Link Enter key to Save button
+        document.getElementById('tracking-id').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                saveData();
+            }
         });
 
         document.getElementById('download-btn').addEventListener('click', function() {
