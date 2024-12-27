@@ -13,21 +13,25 @@
             background-color: #f4f4f9;
         }
         .container {
-            width: 80%;
-            margin: auto;
+            width: 90%;
+            max-width: 1200px;
+            margin: 20px auto;
             padding: 20px;
             background-color: white;
             border-radius: 8px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            margin-top: 30px;
         }
         h1 {
             text-align: center;
             color: #333;
+            margin: 0;
+            font-size: 24px;
         }
         h6 {
             text-align: center;
             color: #333;
+            margin: 5px 0 20px 0;
+            font-size: 14px;
         }
         .form-group {
             margin-bottom: 15px;
@@ -36,6 +40,7 @@
             font-size: 16px;
             font-weight: bold;
             margin-bottom: 5px;
+            display: block;
         }
         select, input {
             width: 100%;
@@ -44,10 +49,11 @@
             margin-top: 5px;
             border-radius: 4px;
             border: 1px solid #ddd;
+            box-sizing: border-box;
         }
         button {
             padding: 10px 15px;
-            background-color: #28a745;
+            background-color: #0084ff;
             color: white;
             font-size: 16px;
             border: none;
@@ -57,7 +63,7 @@
             margin-top: 20px;
         }
         button:hover {
-            background-color: #218838;
+            background-color: #0084ff;
         }
         .table-container {
             margin-top: 20px;
@@ -69,7 +75,8 @@
         }
         th, td {
             padding: 8px 12px;
-            text-align: left;
+            text-align: center;
+            vertical-align: middle;
             border-bottom: 1px solid #ddd;
         }
         th {
@@ -81,12 +88,12 @@
         }
         #scanner {
             width: 100%;
-            max-width: auto; /* Fixed size */
-            height: 90px; /* Fixed height */
+            max-width: 100%;
+            height: 90px;
             border: 2px solid #ccc;
             border-radius: 8px;
             cursor: pointer;
-            object-fit: cover; /* Center fill for camera feed */
+            object-fit: cover;
         }
         #scanner-status {
             font-size: 16px;
@@ -98,17 +105,6 @@
             font-size: 14px;
             margin-top: 5px;
         }
-        .delete-btn {
-            background-color: #dc3545;
-            color: white;
-            border: none;
-            padding: 5px 10px;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-        .delete-btn:hover {
-            background-color: #c82333;
-        }
         .bulk-delete-btn {
             background-color: #dc3545;
             color: white;
@@ -117,9 +113,35 @@
             border-radius: 4px;
             cursor: pointer;
             margin-bottom: 10px;
+            display: none; /* Hidden by default */
         }
         .bulk-delete-btn:hover {
             background-color: #c82333;
+        }
+        .select-entry {
+            vertical-align: middle;
+        }
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 20px;
+            }
+            h6 {
+                font-size: 12px;
+            }
+            .container {
+                width: 95%;
+                padding: 15px;
+            }
+            select, input {
+                font-size: 12px;
+            }
+            button {
+                font-size: 14px;
+            }
+            th, td {
+                padding: 6px 8px;
+                font-size: 12px;
+            }
         }
     </style>
 </head>
@@ -179,8 +201,8 @@
 
         <div class="table-container">
             <h2>Live Scanned Data:</h2>
-            <button id="bulk-delete-btn" class="bulk-delete-btn" style="display: none;">
-                <i class="fas fa-trash"></i> Delete Selected
+            <button id="bulk-delete-btn" class="bulk-delete-btn">
+                <i class="fas fa-trash"></i> Delete
             </button>
             <table id="data-table">
                 <thead>
@@ -191,7 +213,6 @@
                         <th>Dispatch Type</th>
                         <th>Tracking ID</th>
                         <th>Courier</th>
-                        <th>Action</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -364,23 +385,12 @@
                     <td>${entry.dispatchType}</td>
                     <td>${entry.trackingId}</td>
                     <td>${entry.courier}</td>
-                    <td>
-                        <button class="delete-btn" onclick="deleteEntry(${index})">
-                            <i class="fas fa-trash"></i>
-                        </button>
-                    </td>
                 `;
             });
 
             // Show/hide bulk delete button
             const bulkDeleteBtn = document.getElementById('bulk-delete-btn');
             bulkDeleteBtn.style.display = data.length > 0 ? 'block' : 'none';
-        }
-
-        // Delete a single entry
-        function deleteEntry(index) {
-            data.splice(index, 1);
-            updateTable();
         }
 
         // Delete selected entries in bulk
@@ -399,6 +409,21 @@
             document.querySelectorAll('.select-entry').forEach(entry => {
                 entry.checked = selectAll;
             });
+            toggleBulkDeleteButton();
+        });
+
+        // Show/hide bulk delete button based on selection
+        function toggleBulkDeleteButton() {
+            const selectedEntries = document.querySelectorAll('.select-entry:checked');
+            const bulkDeleteBtn = document.getElementById('bulk-delete-btn');
+            bulkDeleteBtn.style.display = selectedEntries.length > 0 ? 'block' : 'none';
+        }
+
+        // Add event listener to checkboxes to toggle bulk delete button
+        document.addEventListener('change', function(e) {
+            if (e.target.classList.contains('select-entry')) {
+                toggleBulkDeleteButton();
+            }
         });
 
         // Start scanning when camera feed is clicked
