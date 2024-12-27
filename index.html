@@ -182,6 +182,18 @@
             display: flex;
             justify-content: center;
             margin-top: 10px;
+            margin-bottom: 20px; /* Add margin to create gap */
+        }
+        .bottom-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 10px; /* Add gap between buttons */
+            margin-top: 20px; /* Add margin to create gap */
+        }
+        /* Ensure all bottom buttons have the same size */
+        .bottom-buttons button {
+            flex: 1; /* Make buttons share available space equally */
+            max-width: 200px; /* Optional: Set a max-width to prevent buttons from becoming too wide */
         }
         @media (max-width: 768px) {
             h1 {
@@ -286,9 +298,11 @@
             </table>
         </div>
 
-        <button id="download-btn">Download as XLSX</button>
-        <button id="clear-all-btn" class="clear-all-btn">Clear All Data</button>
-        <button id="dark-mode-toggle" class="dark-mode-toggle">Toggle Dark Mode</button>
+        <div class="bottom-buttons">
+            <button id="download-btn">Download as XLSX</button>
+            <button id="clear-all-btn" class="clear-all-btn">Clear All Data</button>
+            <button id="dark-mode-toggle" class="dark-mode-toggle">Toggle Dark Mode</button>
+        </div>
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/quagga/0.12.1/quagga.min.js"></script>
