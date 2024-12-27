@@ -493,19 +493,37 @@
         // Delete selected entries in bulk
         function deleteSelectedEntries() {
             const selectedEntries = document.querySelectorAll('.select-entry:checked');
-            selectedEntries.forEach(entry => {
-                const index = entry.getAttribute('data-index');
-                data.splice(index, 1);
-            });
-            updateTable();
-            showToast('Selected entries deleted.', 'success');
+            if (selectedEntries.length === 0) {
+                showToast('No entries selected.', 'error');
+                return;
+            }
+
+            // Confirmation popup
+            const confirmDelete = confirm('Are you sure you want to delete the selected entries?');
+            if (confirmDelete) {
+                selectedEntries.forEach(entry => {
+                    const index = entry.getAttribute('data-index');
+                    data.splice(index, 1);
+                });
+                updateTable();
+                showToast('Selected entries deleted.', 'success');
+            }
         }
 
         // Clear all data
         function clearAllData() {
-            data = [];
-            updateTable();
-            showToast('All data cleared.', 'success');
+            if (data.length === 0) {
+                showToast('No data to clear.', 'error');
+                return;
+            }
+
+            // Confirmation popup
+            const confirmClear = confirm('Are you sure you want to clear all data?');
+            if (confirmClear) {
+                data = [];
+                updateTable();
+                showToast('All data cleared.', 'success');
+            }
         }
 
         // Toggle dark mode
