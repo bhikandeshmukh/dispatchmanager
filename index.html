@@ -25,6 +25,10 @@
             text-align: center;
             color: #333;
         }
+        h6 {
+            text-align: center;
+            color: #333;
+        }
         .form-group {
             margin-bottom: 15px;
         }
@@ -77,8 +81,8 @@
         }
         #scanner {
             width: 100%;
-            max-width: auto; /* Fixed size for Code 128 */
-            height: 80px; /* Fixed height */
+            max-width: auto; /* Fixed size */
+            height: 90px; /* Fixed height */
             border: 2px solid #ccc;
             border-radius: 8px;
             cursor: pointer;
@@ -94,12 +98,36 @@
             font-size: 14px;
             margin-top: 5px;
         }
+        .delete-btn {
+            background-color: #dc3545;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .delete-btn:hover {
+            background-color: #c82333;
+        }
+        .bulk-delete-btn {
+            background-color: #dc3545;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-bottom: 10px;
+        }
+        .bulk-delete-btn:hover {
+            background-color: #c82333;
+        }
     </style>
 </head>
 <body>
 
     <div class="container">
         <h1>Dispatch Manager</h1>
+        <h6>By Bhikan Deshmukh</h6>
 
         <div class="form-group">
             <label for="portal">Select Portal:</label>
@@ -151,14 +179,19 @@
 
         <div class="table-container">
             <h2>Live Scanned Data:</h2>
+            <button id="bulk-delete-btn" class="bulk-delete-btn" style="display: none;">
+                <i class="fas fa-trash"></i> Delete Selected
+            </button>
             <table id="data-table">
                 <thead>
                     <tr>
+                        <th><input type="checkbox" id="select-all"></th>
                         <th>Date</th>
                         <th>Portal</th>
                         <th>Dispatch Type</th>
                         <th>Tracking ID</th>
                         <th>Courier</th>
+                        <th>Action</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -211,7 +244,7 @@
                             facingMode: { exact: "environment" },
                             width: { ideal: 640 }, // Max FPS and resolution
                             height: { ideal: 480 },
-                            frameRate: { ideal: 30 } // Max FPS
+                            frameRate: { ideal: 60 } // Max FPS
                         }
                     };
                     return navigator.mediaDevices.getUserMedia(constraints);
@@ -240,7 +273,7 @@
                         facingMode: "environment", // Use rear camera
                         width: { ideal: 640 }, // Max FPS and resolution
                         height: { ideal: 480 },
-                        frameRate: { ideal: 30 } // Max FPS
+                        frameRate: { ideal: 60 } // Max FPS
                     },
                 },
                 decoder: {
@@ -324,13 +357,49 @@
 
             data.forEach((entry, index) => {
                 const row = tableBody.insertRow();
-                row.insertCell(0).innerText = entry.date;
-                row.insertCell(1).innerText = entry.portal;
-                row.insertCell(2).innerText = entry.dispatchType;
-                row.insertCell(3).innerText = entry.trackingId;
-                row.insertCell(4).innerText = entry.courier;
+                row.innerHTML = `
+                    <td><input type="checkbox" class="select-entry" data-index="${index}"></td>
+                    <td>${entry.date}</td>
+                    <td>${entry.portal}</td>
+                    <td>${entry.dispatchType}</td>
+                    <td>${entry.trackingId}</td>
+                    <td>${entry.courier}</td>
+                    <td>
+                        <button class="delete-btn" onclick="deleteEntry(${index})">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </td>
+                `;
             });
+
+            // Show/hide bulk delete button
+            const bulkDeleteBtn = document.getElementById('bulk-delete-btn');
+            bulkDeleteBtn.style.display = data.length > 0 ? 'block' : 'none';
         }
+
+        // Delete a single entry
+        function deleteEntry(index) {
+            data.splice(index, 1);
+            updateTable();
+        }
+
+        // Delete selected entries in bulk
+        function deleteSelectedEntries() {
+            const selectedEntries = document.querySelectorAll('.select-entry:checked');
+            selectedEntries.forEach(entry => {
+                const index = entry.getAttribute('data-index');
+                data.splice(index, 1);
+            });
+            updateTable();
+        }
+
+        // Select all entries
+        document.getElementById('select-all').addEventListener('click', function() {
+            const selectAll = this.checked;
+            document.querySelectorAll('.select-entry').forEach(entry => {
+                entry.checked = selectAll;
+            });
+        });
 
         // Start scanning when camera feed is clicked
         document.getElementById('scanner').addEventListener('click', function() {
@@ -356,6 +425,11 @@
             const wb = XLSX.utils.book_new();
             XLSX.utils.book_append_sheet(wb, ws, "Dispatch Data");
             XLSX.writeFile(wb, "dispatch_data.xlsx");
+        });
+
+        // Bulk delete button click
+        document.getElementById('bulk-delete-btn').addEventListener('click', function() {
+            deleteSelectedEntries();
         });
     </script>
 
