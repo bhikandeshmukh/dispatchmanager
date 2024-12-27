@@ -170,9 +170,37 @@
         let data = [];
         let isScannerActive = false;
 
+        // Function to get back camera (rear camera)
+        function getBackCamera() {
+            return new Promise((resolve, reject) => {
+                navigator.mediaDevices.enumerateDevices()
+                    .then(devices => {
+                        const videoDevices = devices.filter(device => device.kind === 'videoinput');
+                        const backCamera = videoDevices.find(device => device.label.toLowerCase().includes('back'));
+                        if (backCamera) {
+                            resolve(backCamera.deviceId);
+                        } else {
+                            reject('Back camera not found.');
+                        }
+                    })
+                    .catch(err => {
+                        reject(err);
+                    });
+            });
+        }
+
         // Function to forcefully enable camera access
         function enableCamera() {
-            navigator.mediaDevices.getUserMedia({ video: true })
+            getBackCamera()
+                .then(deviceId => {
+                    const constraints = {
+                        video: {
+                            deviceId: { exact: deviceId },
+                            facingMode: { exact: "environment" }
+                        }
+                    };
+                    return navigator.mediaDevices.getUserMedia(constraints);
+                })
                 .then(stream => {
                     const video = document.getElementById('scanner');
                     video.srcObject = stream;
@@ -277,7 +305,7 @@
             if (isScannerActive) {
                 stopBarcodeScanner();
             } else {
-                enableCamera(); // Forcefully enable camera
+                enableCamera(); // Forcefully enable back camera
                 initBarcodeScanner();
             }
         });
