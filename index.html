@@ -6,229 +6,13 @@
     <title>Dispatch Manager by Bhikan Deshmukh</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f4f4f9;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            backdrop-filter: blur(10px); /* Blur effect for the background */
-        }
-        .container {
-            width: 90%;
-            max-width: 1200px;
-            margin: 20px;
-            padding: 20px;
-            background-color: rgba(255, 255, 255, 0.9); /* Semi-transparent white */
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-            border: 1px solid rgba(255, 255, 255, 0.3); /* Light border */
-            backdrop-filter: blur(10px); /* Blur effect for the container */
-        }
-        h1 {
-            text-align: center;
-            color: #333;
-            margin: 0;
-            font-size: 24px;
-        }
-        h6 {
-            text-align: center;
-            color: #333;
-            margin: 5px 0 20px 0;
-            font-size: 14px;
-        }
-        .form-group {
-            margin-bottom: 15px;
-        }
-        .form-group label {
-            font-size: 16px;
-            font-weight: bold;
-            margin-bottom: 5px;
-            display: block;
-        }
-        select, input {
-            width: 100%;
-            padding: 8px;
-            font-size: 14px;
-            margin-top: 5px;
-            border-radius: 4px;
-            border: 1px solid #ddd;
-            box-sizing: border-box;
-        }
-        button {
-            padding: 10px 15px;
-            background-color: #28a745;
-            color: white;
-            font-size: 16px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            width: 100%;
-            margin-top: 20px;
-        }
-        button:hover {
-            background-color: #218838;
-        }
-        .table-container {
-            margin-top: 20px;
-            overflow-x: auto;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        th, td {
-            padding: 8px 12px;
-            text-align: center;
-            vertical-align: middle;
-            border-bottom: 1px solid #ddd;
-        }
-        th {
-            background-color: #f2f2f2;
-        }
-        #scanner-container {
-            margin-top: 20px;
-            text-align: center;
-        }
-        #scanner {
-            width: 100%;
-            max-width: 100%;
-            height: 90px;
-            border: 2px solid #ccc;
-            border-radius: 8px;
-            cursor: pointer;
-            object-fit: cover;
-        }
-        #scanner-status {
-            font-size: 16px;
-            font-weight: bold;
-            margin-top: 10px;
-        }
-        .error-message {
-            color: red;
-            font-size: 14px;
-            margin-top: 5px;
-        }
-        .bulk-delete-btn {
-            background-color: #dc3545;
-            color: white;
-            border: none;
-            padding: 10px 15px;
-            border-radius: 4px;
-            cursor: pointer;
-            margin-bottom: 10px;
-            display: none; /* Hidden by default */
-        }
-        .bulk-delete-btn:hover {
-            background-color: #c82333;
-        }
-        .select-entry {
-            vertical-align: middle;
-        }
-        @media (max-width: 768px) {
-            h1 {
-                font-size: 20px;
-            }
-            h6 {
-                font-size: 12px;
-            }
-            .container {
-                width: 95%;
-                padding: 15px;
-            }
-            select, input {
-                font-size: 12px;
-            }
-            button {
-                font-size: 14px;
-            }
-            th, td {
-                padding: 6px 8px;
-                font-size: 12px;
-            }
-        }
+        /* Your existing CSS styles */
     </style>
 </head>
 <body>
 
     <div class="container">
-        <h1>Dispatch Manager</h1>
-        <h6>By Bhikan Deshmukh</h6>
-
-        <div class="form-group">
-            <label for="portal">Select Portal:</label>
-            <select id="portal">
-                <option value="Flipkart">Flipkart</option>
-                <option value="Myntra">Myntra</option>
-                <option value="Meesho">Meesho</option>
-                <option value="Amazon">Amazon</option>
-                <option value="Amazon Flex">Amazon Flex</option>
-                <option value="Snapdeal">Snapdeal</option>
-            </select>
-        </div>
-
-        <div class="form-group">
-            <label for="courier">Select Courier:</label>
-            <select id="courier">
-                <option value="Ekart">Ekart</option>
-                <option value="Shadowfax">Shadowfax</option>
-                <option value="Delhivery">Delhivery</option>
-                <option value="Xpressbees">Xpressbees</option>
-                <option value="Ecom Express">Ecom Express</option>
-                <option value="ATS">ATS</option>
-                <option value="BlueDart">BlueDart</option>
-            </select>
-        </div>
-
-        <div class="form-group">
-            <label for="dispatch">Select Dispatch Type:</label>
-            <select id="dispatch">
-                <option value="Dispatch">Dispatch</option>
-                <option value="Return">Return</option>
-                <option value="Cancel">Cancel</option>
-            </select>
-        </div>
-
-        <div class="form-group">
-            <label for="tracking-id">Enter Tracking ID:</label>
-            <input type="text" id="tracking-id" placeholder="Scan/Enter Tracking ID">
-            <div id="tracking-id-error" class="error-message"></div>
-        </div>
-
-        <button id="save-btn">Save Data</button>
-
-        <div id="scanner-container">
-            <h3>Camera Live Feed</h3>
-            <video id="scanner" autoplay></video>
-            <p id="scanner-status">Scanning is stopped. Click to start scanning.</p>
-        </div>
-
-        <div class="table-container">
-            <h2>Live Scanned Data:</h2>
-            <button id="bulk-delete-btn" class="bulk-delete-btn">
-                <i class="fas fa-trash"></i> Delete
-            </button>
-            <table id="data-table">
-                <thead>
-                    <tr>
-                        <th><input type="checkbox" id="select-all"></th>
-                        <th>Date</th>
-                        <th>Portal</th>
-                        <th>Dispatch Type</th>
-                        <th>Tracking ID</th>
-                        <th>Courier</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <!-- Data will be populated here -->
-                </tbody>
-            </table>
-        </div>
-
-        <button id="download-btn">Download as XLSX</button>
+        <!-- Your existing HTML content -->
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/quagga/0.12.1/quagga.min.js"></script>
@@ -236,12 +20,23 @@
     <script>
         let data = [];
         let isScannerActive = false;
+        let beepSound; // Variable to hold the beep sound
+
+        // Preload the beep sound
+        function preloadBeepSound() {
+            beepSound = new Audio('beep.wav'); // Use 'beep.mp3' if needed
+            beepSound.load(); // Preload the sound
+        }
 
         // Function to play beep sound
         function playBeepSound() {
-            const beepSound = new Audio('beep.wav'); // Use 'beep.mp3' if needed
-            beepSound.play().catch(err => console.error('Error playing beep sound:', err));
+            if (beepSound) {
+                beepSound.play().catch(err => console.error('Error playing beep sound:', err));
+            }
         }
+
+        // Preload the beep sound when the page loads
+        window.onload = preloadBeepSound;
 
         // Function to get back camera (rear camera)
         function getBackCamera() {
