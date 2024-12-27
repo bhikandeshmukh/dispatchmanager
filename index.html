@@ -5,18 +5,276 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dispatch Manager by Bhikan Deshmukh</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
     <style>
-        /* Your existing CSS styles */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f9;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            backdrop-filter: blur(10px);
+            transition: background-color 0.3s, color 0.3s;
+        }
+        body.dark-mode {
+            background-color: #121212;
+            color: #ffffff;
+        }
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 20px;
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            backdrop-filter: blur(10px);
+            transition: background-color 0.3s;
+        }
+        body.dark-mode .container {
+            background-color: rgba(0, 0, 0, 0.9);
+            border-color: rgba(255, 255, 255, 0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+            margin: 0;
+            font-size: 24px;
+        }
+        body.dark-mode h1 {
+            color: #ffffff;
+        }
+        h6 {
+            text-align: center;
+            color: #333;
+            margin: 5px 0 20px 0;
+            font-size: 14px;
+        }
+        body.dark-mode h6 {
+            color: #ffffff;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 5px;
+            display: block;
+        }
+        select, input {
+            width: 100%;
+            padding: 8px;
+            font-size: 14px;
+            margin-top: 5px;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+            box-sizing: border-box;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        body.dark-mode select, body.dark-mode input {
+            background-color: #333;
+            color: #ffffff;
+            border-color: #555;
+        }
+        button {
+            padding: 10px 15px;
+            background-color: #28a745;
+            color: white;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 20px;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #218838;
+        }
+        .bulk-delete-btn {
+            background-color: #dc3545;
+        }
+        .bulk-delete-btn:hover {
+            background-color: #c82333;
+        }
+        .dark-mode-toggle {
+            background-color: #333;
+            margin-top: 10px;
+        }
+        .dark-mode-toggle:hover {
+            background-color: #555;
+        }
+        .clear-all-btn {
+            background-color: #ffc107;
+            color: #000;
+            margin-top: 10px;
+        }
+        .clear-all-btn:hover {
+            background-color: #e0a800;
+        }
+        .table-container {
+            margin-top: 20px;
+            overflow-x: auto;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 8px 12px;
+            text-align: center;
+            vertical-align: middle;
+            border-bottom: 1px solid #ddd;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        body.dark-mode th, body.dark-mode td {
+            border-color: #555;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        body.dark-mode th {
+            background-color: #333;
+        }
+        #scanner-container {
+            margin-top: 20px;
+            text-align: center;
+        }
+        #scanner {
+            width: 100%;
+            max-width: 100%;
+            height: 90px;
+            border: 2px solid #ccc;
+            border-radius: 8px;
+            cursor: pointer;
+            object-fit: cover;
+        }
+        #scanner-status {
+            font-size: 16px;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+        .error-message {
+            color: red;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+        .select-entry {
+            vertical-align: middle;
+        }
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 20px;
+            }
+            h6 {
+                font-size: 12px;
+            }
+            .container {
+                width: 95%;
+                padding: 15px;
+            }
+            select, input {
+                font-size: 12px;
+            }
+            button {
+                font-size: 14px;
+            }
+            th, td {
+                padding: 6px 8px;
+                font-size: 12px;
+            }
+        }
     </style>
 </head>
 <body>
 
     <div class="container">
-        <!-- Your existing HTML content -->
+        <h1>Dispatch Manager</h1>
+        <h6>By Bhikan Deshmukh</h6>
+
+        <div class="form-group">
+            <label for="portal">Select Portal:</label>
+            <select id="portal">
+                <option value="Flipkart">Flipkart</option>
+                <option value="Myntra">Myntra</option>
+                <option value="Meesho">Meesho</option>
+                <option value="Amazon">Amazon</option>
+                <option value="Amazon Flex">Amazon Flex</option>
+                <option value="Snapdeal">Snapdeal</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="courier">Select Courier:</label>
+            <select id="courier">
+                <option value="Ekart">Ekart</option>
+                <option value="Shadowfax">Shadowfax</option>
+                <option value="Delhivery">Delhivery</option>
+                <option value="Xpressbees">Xpressbees</option>
+                <option value="Ecom Express">Ecom Express</option>
+                <option value="ATS">ATS</option>
+                <option value="BlueDart">BlueDart</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="dispatch">Select Scan Type:</label>
+            <select id="dispatch">
+                <option value="Dispatch">Dispatch</option>
+                <option value="Return">Return</option>
+                <option value="Cancel">Cancel</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="tracking-id">Enter Tracking ID:</label>
+            <input type="text" id="tracking-id" placeholder="Scan/Enter Tracking ID">
+            <div id="tracking-id-error" class="error-message"></div>
+        </div>
+
+        <button id="save-btn">Save Data</button>
+        <button id="clear-all-btn" class="clear-all-btn">Clear All Data</button>
+        <button id="dark-mode-toggle" class="dark-mode-toggle">Toggle Dark Mode</button>
+
+        <div id="scanner-container">
+            <h3>Camera Live Feed</h3>
+            <video id="scanner" autoplay></video>
+            <p id="scanner-status">Scanning is stopped. Click to start scanning.</p>
+        </div>
+
+        <div class="table-container">
+            <h2>Live Scanned Data:</h2>
+            <button id="bulk-delete-btn" class="bulk-delete-btn">
+                <i class="fas fa-trash"></i> Delete
+            </button>
+            <table id="data-table">
+                <thead>
+                    <tr>
+                        <th><input type="checkbox" id="select-all"></th>
+                        <th>Date</th>
+                        <th>Portal</th>
+                        <th>Dispatch Type</th>
+                        <th>Tracking ID</th>
+                        <th>Courier</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Data will be populated here -->
+                </tbody>
+            </table>
+        </div>
+
+        <button id="download-btn">Download as XLSX</button>
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/quagga/0.12.1/quagga.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.1/xlsx.full.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
     <script>
         let data = [];
         let isScannerActive = false;
@@ -37,6 +295,18 @@
 
         // Preload the beep sound when the page loads
         window.onload = preloadBeepSound;
+
+        // Function to show toast notifications
+        function showToast(message, type = 'success') {
+            Toastify({
+                text: message,
+                duration: 3000,
+                close: true,
+                gravity: "top",
+                position: "right",
+                backgroundColor: type === 'success' ? '#28a745' : '#dc3545',
+            }).showToast();
+        }
 
         // Function to get back camera (rear camera)
         function getBackCamera() {
@@ -82,6 +352,7 @@
                 .catch(err => {
                     console.error(err);
                     document.getElementById('scanner-status').innerText = 'Error accessing camera. Please try again.';
+                    showToast('Error accessing camera. Please try again.', 'error');
                 });
         }
 
@@ -108,6 +379,7 @@
                 if (err) {
                     console.error(err);
                     document.getElementById('scanner-status').innerText = 'Error initializing scanner.';
+                    showToast('Error initializing scanner.', 'error');
                     return;
                 }
                 Quagga.start();
@@ -126,8 +398,10 @@
                     // Check for duplicate barcode
                     if (isDuplicateBarcode(barcode)) {
                         document.getElementById('tracking-id-error').innerText = 'Duplicate barcode detected.';
+                        showToast('Duplicate barcode detected.', 'error');
                     } else {
                         saveData(); // Automatically save data to table
+                        showToast('Barcode scanned successfully.', 'success');
                     }
                 }
             });
@@ -154,6 +428,7 @@
 
             if (!portal || !courier || !dispatch || !trackingId) {
                 document.getElementById('tracking-id-error').innerText = 'Please fill all fields.';
+                showToast('Please fill all fields.', 'error');
                 return;
             } else {
                 document.getElementById('tracking-id-error').innerText = '';
@@ -170,6 +445,7 @@
             data.push(newEntry);
             updateTable();
             document.getElementById('tracking-id').value = ''; // Clear input after save
+            document.getElementById('tracking-id').focus(); // Auto-focus on tracking ID field
             document.getElementById('scanner-status').innerText = 'Scanning is active. Click to scan.';
         }
 
@@ -203,9 +479,28 @@
                 data.splice(index, 1);
             });
             updateTable();
+            showToast('Selected entries deleted.', 'success');
         }
 
-        // Select all entries
+        // Clear all data
+        function clearAllData() {
+            data = [];
+            updateTable();
+            showToast('All data cleared.', 'success');
+        }
+
+        // Toggle dark mode
+        function toggleDarkMode() {
+            document.body.classList.toggle('dark-mode');
+            localStorage.setItem('darkMode', document.body.classList.contains('dark-mode'));
+        }
+
+        // Apply dark mode on page load
+        if (localStorage.getItem('darkMode') === 'true') {
+            document.body.classList.add('dark-mode');
+        }
+
+        // Event listeners
         document.getElementById('select-all').addEventListener('click', function() {
             const selectAll = this.checked;
             document.querySelectorAll('.select-entry').forEach(entry => {
@@ -214,21 +509,12 @@
             toggleBulkDeleteButton();
         });
 
-        // Show/hide bulk delete button based on selection
-        function toggleBulkDeleteButton() {
-            const selectedEntries = document.querySelectorAll('.select-entry:checked');
-            const bulkDeleteBtn = document.getElementById('bulk-delete-btn');
-            bulkDeleteBtn.style.display = selectedEntries.length > 0 ? 'block' : 'none';
-        }
-
-        // Add event listener to checkboxes to toggle bulk delete button
         document.addEventListener('change', function(e) {
             if (e.target.classList.contains('select-entry')) {
                 toggleBulkDeleteButton();
             }
         });
 
-        // Start scanning when camera feed is clicked
         document.getElementById('scanner').addEventListener('click', function() {
             if (!isScannerActive) {
                 enableCamera();
@@ -236,15 +522,13 @@
             }
         });
 
-        // Save data on "Save Data" button click
         document.getElementById('save-btn').addEventListener('click', function() {
             saveData();
         });
 
-        // Download data as XLSX
         document.getElementById('download-btn').addEventListener('click', function() {
             if (data.length === 0) {
-                alert('No data to download.');
+                showToast('No data to download.', 'error');
                 return;
             }
 
@@ -252,11 +536,19 @@
             const wb = XLSX.utils.book_new();
             XLSX.utils.book_append_sheet(wb, ws, "Dispatch Data");
             XLSX.writeFile(wb, "dispatch_data.xlsx");
+            showToast('Data downloaded successfully.', 'success');
         });
 
-        // Bulk delete button click
         document.getElementById('bulk-delete-btn').addEventListener('click', function() {
             deleteSelectedEntries();
+        });
+
+        document.getElementById('clear-all-btn').addEventListener('click', function() {
+            clearAllData();
+        });
+
+        document.getElementById('dark-mode-toggle').addEventListener('click', function() {
+            toggleDarkMode();
         });
     </script>
 
