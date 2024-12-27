@@ -78,10 +78,11 @@
         #scanner {
             width: 100%;
             max-width: 300px; /* Fixed size for Code 128 */
-            height: 70px;
+            height: 70px; /* Fixed height */
             border: 2px solid #ccc;
             border-radius: 8px;
             cursor: pointer;
+            object-fit: cover; /* Center fill for camera feed */
         }
         #scanner-status {
             font-size: 16px;
@@ -207,7 +208,10 @@
                     const constraints = {
                         video: {
                             deviceId: { exact: deviceId },
-                            facingMode: { exact: "environment" }
+                            facingMode: { exact: "environment" },
+                            width: { ideal: 640 }, // Max FPS and resolution
+                            height: { ideal: 480 },
+                            frameRate: { ideal: 30 } // Max FPS
                         }
                     };
                     return navigator.mediaDevices.getUserMedia(constraints);
@@ -234,11 +238,16 @@
                     target: document.querySelector('#scanner'),
                     constraints: {
                         facingMode: "environment", // Use rear camera
+                        width: { ideal: 640 }, // Max FPS and resolution
+                        height: { ideal: 480 },
+                        frameRate: { ideal: 30 } // Max FPS
                     },
                 },
                 decoder: {
                     readers: ["code_128_reader", "code_39_reader"], // Only Code 128 and Code 39
                 },
+                locate: true, // Improve barcode detection accuracy
+                numOfWorkers: 4, // Use multiple workers for better performance
             }, function(err) {
                 if (err) {
                     console.error(err);
@@ -252,16 +261,18 @@
             // Event listener for barcode found
             Quagga.onDetected(function(result) {
                 const barcode = result.codeResult.code;
-                document.getElementById('tracking-id').value = barcode; // Set scanned barcode in tracking ID field
-                document.getElementById('scanner-status').innerText = 'Barcode scanned: ' + barcode;
-                stopBarcodeScanner(); // Stop scanner after detection
+                if (barcode && barcode.trim() !== "") { // Ensure valid barcode
+                    document.getElementById('tracking-id').value = barcode; // Set scanned barcode in tracking ID field
+                    document.getElementById('scanner-status').innerText = 'Barcode scanned: ' + barcode;
+                    stopBarcodeScanner(); // Stop scanner after detection
+                    playBeepSound(); // Play beep sound immediately
 
-                // Check for duplicate barcode
-                if (isDuplicateBarcode(barcode)) {
-                    document.getElementById('tracking-id-error').innerText = 'Duplicate barcode detected.';
-                } else {
-                    playBeepSound(); // Play beep sound
-                    saveData(); // Automatically save data to table
+                    // Check for duplicate barcode
+                    if (isDuplicateBarcode(barcode)) {
+                        document.getElementById('tracking-id-error').innerText = 'Duplicate barcode detected.';
+                    } else {
+                        saveData(); // Automatically save data to table
+                    }
                 }
             });
         }
