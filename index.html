@@ -134,7 +134,7 @@
             <div id="tracking-id-error" class="error-message"></div>
         </div>
 
-        <button id="scan-btn">Scan Barcode</button>
+        <button id="scan-btn">Start Scanner</button>
         <button id="save-btn">Save Data</button>
 
         <div id="scanner-container">
@@ -193,6 +193,7 @@
                 Quagga.start();
                 isScannerActive = true;
                 document.getElementById('scanner-status').innerText = 'Camera is live. Ready to scan barcodes.';
+                document.getElementById('scan-btn').innerText = 'Stop Scanner'; // Update button text
             });
 
             // Event listener for barcode found
@@ -203,17 +204,18 @@
             });
         }
 
-        // Start the camera feed automatically when the page loads
-        window.onload = function() {
-            initBarcodeScanner();
-        };
+        // Stop the scanner
+        function stopBarcodeScanner() {
+            Quagga.stop();
+            isScannerActive = false;
+            document.getElementById('scanner-status').innerText = 'Scanner stopped. Click "Start Scanner" to begin.';
+            document.getElementById('scan-btn').innerText = 'Start Scanner'; // Update button text
+        }
 
         // Toggle scanner on "Scan Barcode" button click
         document.getElementById('scan-btn').addEventListener('click', function() {
             if (isScannerActive) {
-                Quagga.stop();
-                isScannerActive = false;
-                document.getElementById('scanner-status').innerText = 'Scanner stopped. Click "Scan Barcode" to start again.';
+                stopBarcodeScanner();
             } else {
                 initBarcodeScanner();
             }
