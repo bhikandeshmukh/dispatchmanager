@@ -8,9 +8,6 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3210573001924811"
      crossorigin="anonymous"></script>
-     
-    <!-- Popunder विज्ञापन कोड यहां जोड़ें -->
-    <!-- <script>विज्ञापन कोड यहां पेस्ट करें</script> -->
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -200,52 +197,6 @@
             flex: 1; /* Make buttons share available space equally */
             max-width: 200px; /* Optional: Set a max-width to prevent buttons from becoming too wide */
         }
-        
-        /* विज्ञापन कंटेनर के लिए स्टाइल */
-        .ad-container {
-            width: 100%;
-            margin: 15px 0;
-            padding: 10px;
-            background-color: rgba(248, 249, 250, 0.9);
-            border-radius: 8px;
-            border: 1px solid #ddd;
-            text-align: center;
-            overflow: hidden;
-            transition: background-color 0.3s;
-        }
-        
-        body.dark-mode .ad-container {
-            background-color: rgba(33, 37, 41, 0.9);
-            border-color: #555;
-        }
-        
-        .ad-label {
-            display: block;
-            font-size: 12px;
-            color: #6c757d;
-            margin-bottom: 5px;
-            text-align: center;
-        }
-        
-        body.dark-mode .ad-label {
-            color: #adb5bd;
-        }
-        
-        .banner-ad {
-            min-height: 90px;
-        }
-        
-        .native-ad {
-            min-height: 250px;
-        }
-        
-        .social-bar-ad {
-            min-height: 50px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 15px;
-        }
         @media (max-width: 768px) {
             h1 {
                 font-size: 20px;
@@ -271,29 +222,10 @@
     </style>
 </head>
 <body>
-    <!-- Popunder विज्ञापन कंटेनर - पेज लोड होने पर दिखेगा -->
-    <div id="popunder-ad-container"></div>
-    
+
     <div class="container">
         <h1>Dispatch Manager</h1>
         <h6>By Bhikan Deshmukh</h6>
-        
-        <!-- बैनर विज्ञापन कंटेनर - शीर्ष पर -->
-        <div class="ad-container banner-ad">
-            <span class="ad-label">विज्ञापन</span>
-            <!-- बैनर विज्ञापन कोड यहां जोड़ें -->
-            <script type="text/javascript">
-                atOptions = {
-                    'key' : '3263e31721dd728f9b52fb25591b1a9f',
-                    'format' : 'iframe',
-                    'height' : 90,
-                    'width' : 728,
-                    'params' : {}
-                };
-            </script>
-            <script type="text/javascript" src="//www.highperformanceformat.com/3263e31721dd728f9b52fb25591b1a9f/invoke.js"></script>
-            <!-- <script>बैनर विज्ञापन कोड यहां पेस्ट करें</script> -->
-        </div>
 
         <div class="form-group">
             <label for="portal">Select Portal:</label>
@@ -338,13 +270,6 @@
             <div id="tracking-id-error" class="error-message"></div>
         </div>
 
-        <!-- नेटिव विज्ञापन कंटेनर - फॉर्म के बाद -->
-        <div class="ad-container native-ad">
-            <span class="ad-label">प्रायोजित सामग्री</span>
-            <!-- नेटिव विज्ञापन कोड यहां जोड़ें -->
-            <!-- <script>नेटिव विज्ञापन कोड यहां पेस्ट करें</script> -->
-        </div>
-        
         <div id="scanner-container">
             <h3>Camera Live Feed</h3>
             <video id="scanner" autoplay></video>
@@ -375,13 +300,6 @@
             </table>
         </div>
 
-        <!-- डायरेक्ट लिंक विज्ञापन कंटेनर - टेबल के बाद -->
-        <div class="ad-container">
-            <span class="ad-label">प्रायोजित लिंक</span>
-            <!-- डायरेक्ट लिंक विज्ञापन कोड यहां जोड़ें -->
-            <!-- <script>डायरेक्ट लिंक विज्ञापन कोड यहां पेस्ट करें</script> -->
-        </div>
-        
         <div class="bottom-buttons">
             <button id="download-btn">Download as XLSX</button>
             <button id="clear-all-btn" class="clear-all-btn">Clear All Data</button>
@@ -693,13 +611,6 @@
             toggleDarkMode();
         });
     </script>
-    
-    <!-- सोशल बार विज्ञापन कंटेनर - पेज के अंत में -->
-    <div class="ad-container social-bar-ad">
-        <span class="ad-label">फॉलो करें</span>
-        <!-- सोशल बार विज्ञापन कोड यहां जोड़ें -->
-        <!-- <script>सोशल बार विज्ञापन कोड यहां पेस्ट करें</script> -->
-    </div>
 
 </body>
 </html>
