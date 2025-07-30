@@ -4,6 +4,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dispatch Manager by Bhikan Deshmukh</title>
+    
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-02GH38648H"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-02GH38648H');
+    </script>
+    
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3210573001924811"
+     crossorigin="anonymous"></script>
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3210573001924811"
@@ -197,6 +210,21 @@
             flex: 1; /* Make buttons share available space equally */
             max-width: 200px; /* Optional: Set a max-width to prevent buttons from becoming too wide */
         }
+        
+        /* Ad container styles */
+        .ad-container {
+            text-align: center;
+            margin: 20px 0;
+            padding: 10px;
+            background-color: rgba(240, 240, 240, 0.5);
+            border-radius: 8px;
+            border: 1px dashed #ccc;
+        }
+        body.dark-mode .ad-container {
+            background-color: rgba(50, 50, 50, 0.5);
+            border-color: #555;
+        }
+        
         @media (max-width: 768px) {
             h1 {
                 font-size: 20px;
@@ -226,6 +254,22 @@
     <div class="container">
         <h1>Dispatch Manager</h1>
         <h6>By Bhikan Deshmukh</h6>
+
+        <!-- Header Ad Placement - Uncomment when you want to add ads -->
+        <!--
+        <div class="ad-container">
+            <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+            <ins class="adsbygoogle"
+                 style="display:block"
+                 data-ad-client="ca-pub-3210573001924811"
+                 data-ad-slot="YOUR_AD_SLOT_ID_HERE"
+                 data-ad-format="auto"
+                 data-full-width-responsive="true"></ins>
+            <script>
+                 (adsbygoogle = window.adsbygoogle || []).push({});
+            </script>
+        </div>
+        -->
 
         <div class="form-group">
             <label for="portal">Select Portal:</label>
@@ -270,6 +314,22 @@
             <div id="tracking-id-error" class="error-message"></div>
         </div>
 
+        <!-- Mid-Content Ad Placement - Uncomment when you want to add ads -->
+        <!--
+        <div class="ad-container">
+            <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+            <ins class="adsbygoogle"
+                 style="display:block"
+                 data-ad-client="ca-pub-3210573001924811"
+                 data-ad-slot="YOUR_AD_SLOT_ID_HERE"
+                 data-ad-format="auto"
+                 data-full-width-responsive="true"></ins>
+            <script>
+                 (adsbygoogle = window.adsbygoogle || []).push({});
+            </script>
+        </div>
+        -->
+
         <div id="scanner-container">
             <h3>Camera Live Feed</h3>
             <video id="scanner" autoplay></video>
@@ -299,6 +359,22 @@
                 </tbody>
             </table>
         </div>
+
+        <!-- Before Footer Ad Placement - Uncomment when you want to add ads -->
+        <!--
+        <div class="ad-container">
+            <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+            <ins class="adsbygoogle"
+                 style="display:block"
+                 data-ad-client="ca-pub-3210573001924811"
+                 data-ad-slot="YOUR_AD_SLOT_ID_HERE"
+                 data-ad-format="auto"
+                 data-full-width-responsive="true"></ins>
+            <script>
+                 (adsbygoogle = window.adsbygoogle || []).push({});
+            </script>
+        </div>
+        -->
 
         <div class="bottom-buttons">
             <button id="download-btn">Download as XLSX</button>
@@ -610,6 +686,18 @@
         document.getElementById('dark-mode-toggle').addEventListener('click', function() {
             toggleDarkMode();
         });
+
+        // Missing function for toggle bulk delete button
+        function toggleBulkDeleteButton() {
+            const selectedEntries = document.querySelectorAll('.select-entry:checked');
+            const bulkDeleteBtn = document.getElementById('bulk-delete-btn');
+            const selectAllCheckbox = document.getElementById('select-all');
+            
+            // Update select all checkbox state
+            const allEntries = document.querySelectorAll('.select-entry');
+            selectAllCheckbox.indeterminate = selectedEntries.length > 0 && selectedEntries.length < allEntries.length;
+            selectAllCheckbox.checked = selectedEntries.length === allEntries.length && allEntries.length > 0;
+        }
     </script>
 
 </body>
