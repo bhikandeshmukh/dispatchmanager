@@ -390,6 +390,109 @@
             background-color: #1a5928;
         }
 
+        /* Login Screen */
+        .login-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+
+        .login-box {
+            background-color: white;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            max-width: 400px;
+            width: 90%;
+        }
+
+        body.dark-mode .login-box {
+            background-color: #1a1a1a;
+        }
+
+        .login-box h2 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #333;
+        }
+
+        body.dark-mode .login-box h2 {
+            color: #ffffff;
+        }
+
+        .login-box input {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+
+        .login-box button {
+            width: 100%;
+            padding: 12px;
+            margin-top: 10px;
+        }
+
+        .user-info {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 10px 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        body.dark-mode .user-info {
+            background-color: rgba(0, 0, 0, 0.9);
+        }
+
+        .user-info button {
+            padding: 5px 10px;
+            font-size: 12px;
+            margin: 0;
+        }
+
+        /* Custom input for dropdowns */
+        .custom-input-container {
+            display: none;
+            margin-top: 10px;
+        }
+
+        .custom-input-container.active {
+            display: block;
+        }
+
+        .custom-input-container input {
+            width: 100%;
+            padding: 8px;
+            border: 2px solid #28a745;
+            border-radius: 4px;
+        }
+
+        /* WhatsApp share button */
+        .whatsapp-share-btn {
+            background-color: #25D366;
+            color: white;
+        }
+
+        .whatsapp-share-btn:hover {
+            background-color: #1da851;
+        }
+
 
         @media (max-width: 768px) {
             h1 {
@@ -425,6 +528,24 @@
 
 <body>
 
+    <!-- Login Screen -->
+    <div class="login-container" id="login-container">
+        <div class="login-box">
+            <h2><i class="fas fa-user-circle"></i> Login</h2>
+            <div id="login-error" class="error-message"></div>
+            <input type="text" id="login-username" placeholder="Username">
+            <input type="password" id="login-password" placeholder="Password">
+            <button id="login-btn">Login</button>
+            <button id="register-btn" style="background-color: #007bff;">Register New User</button>
+        </div>
+    </div>
+
+    <!-- User Info Display -->
+    <div class="user-info" id="user-info" style="display: none;">
+        <span><i class="fas fa-user"></i> <strong id="current-user"></strong></span>
+        <button id="logout-btn" style="background-color: #dc3545;">Logout</button>
+    </div>
+
     <div class="container">
         <h1>Dispatch Manager</h1>
         <h6>By Bhikan Deshmukh</h6>
@@ -438,7 +559,12 @@
                 <option value="Amazon">Amazon</option>
                 <option value="Amazon Flex">Amazon Flex</option>
                 <option value="Snapdeal">Snapdeal</option>
+                <option value="custom">➕ Add Custom Portal</option>
             </select>
+            <div class="custom-input-container" id="custom-portal-container">
+                <input type="text" id="custom-portal-input" placeholder="Enter custom portal name">
+                <button id="add-custom-portal-btn" style="margin-top: 5px;">Add Portal</button>
+            </div>
         </div>
 
         <div class="form-group">
@@ -451,7 +577,12 @@
                 <option value="Ecom Express">Ecom Express</option>
                 <option value="ATS">ATS</option>
                 <option value="BlueDart">BlueDart</option>
+                <option value="custom">➕ Add Custom Courier</option>
             </select>
+            <div class="custom-input-container" id="custom-courier-container">
+                <input type="text" id="custom-courier-input" placeholder="Enter custom courier name">
+                <button id="add-custom-courier-btn" style="margin-top: 5px;">Add Courier</button>
+            </div>
         </div>
 
         <div class="form-group">
@@ -550,6 +681,7 @@
 
         <div class="bottom-buttons">
             <button id="download-btn">Download as XLSX</button>
+            <button id="whatsapp-share-btn" class="whatsapp-share-btn"><i class="fab fa-whatsapp"></i> Share on WhatsApp</button>
             <button id="clear-all-btn" class="clear-all-btn">Clear All Data</button>
             <button id="dark-mode-toggle" class="dark-mode-toggle">Toggle Dark Mode</button>
         </div>
@@ -568,6 +700,9 @@
         let beepSound;
         let editingIndex = null;
         let autoBackupInterval = null;
+        let currentUser = null;
+        let customPortals = [];
+        let customCouriers = [];
 
         // Register Service Worker for PWA
         if ('serviceWorker' in navigator) {
@@ -576,24 +711,295 @@
                 .catch(err => console.log('Service Worker registration failed'));
         }
 
-        // Load data from localStorage on page load
-        function loadDataFromStorage() {
-            const savedData = localStorage.getItem('dispatchData');
+        // User Authentication Functions
+        function loadUsers() {
+            const users = localStorage.getItem('dispatchUsers');
+            return users ? JSON.parse(users) : [];
+        }
+
+        function saveUsers(users) {
+            localStorage.setItem('dispatchUsers', JSON.stringify(users));
+        }
+
+        function registerUser() {
+            const username = document.getElementById('login-username').value.trim();
+            const password = document.getElementById('login-password').value.trim();
+            
+            if (!username || !password) {
+                document.getElementById('login-error').innerText = 'Please enter username and password';
+                return;
+            }
+
+            const users = loadUsers();
+            if (users.find(u => u.username === username)) {
+                document.getElementById('login-error').innerText = 'Username already exists';
+                return;
+            }
+
+            users.push({ username, password, createdAt: new Date().toISOString() });
+            saveUsers(users);
+            showToast('User registered successfully! Please login.', 'success');
+            document.getElementById('login-username').value = '';
+            document.getElementById('login-password').value = '';
+            document.getElementById('login-error').innerText = '';
+        }
+
+        function loginUser() {
+            const username = document.getElementById('login-username').value.trim();
+            const password = document.getElementById('login-password').value.trim();
+            
+            if (!username || !password) {
+                document.getElementById('login-error').innerText = 'Please enter username and password';
+                return;
+            }
+
+            const users = loadUsers();
+            const user = users.find(u => u.username === username && u.password === password);
+            
+            if (user) {
+                currentUser = username;
+                localStorage.setItem('currentUser', username);
+                document.getElementById('login-container').style.display = 'none';
+                document.getElementById('user-info').style.display = 'flex';
+                document.getElementById('current-user').innerText = username;
+                loadUserData();
+                showToast('Welcome ' + username + '!', 'success');
+            } else {
+                document.getElementById('login-error').innerText = 'Invalid username or password';
+            }
+        }
+
+        function logoutUser() {
+            if (confirm('Are you sure you want to logout?')) {
+                currentUser = null;
+                localStorage.removeItem('currentUser');
+                document.getElementById('login-container').style.display = 'flex';
+                document.getElementById('user-info').style.display = 'none';
+                data = [];
+                updateTable();
+                showToast('Logged out successfully', 'success');
+            }
+        }
+
+        function checkLogin() {
+            const savedUser = localStorage.getItem('currentUser');
+            if (savedUser) {
+                currentUser = savedUser;
+                document.getElementById('login-container').style.display = 'none';
+                document.getElementById('user-info').style.display = 'flex';
+                document.getElementById('current-user').innerText = savedUser;
+                loadUserData();
+            }
+        }
+
+        function loadUserData() {
+            const userDataKey = 'dispatchData_' + currentUser;
+            const savedData = localStorage.getItem(userDataKey);
             if (savedData) {
                 try {
                     data = JSON.parse(savedData);
                     updateTable();
-                    showToast('Data loaded from storage', 'success');
                 } catch (e) {
-                    console.error('Error loading data:', e);
+                    console.error('Error loading user data:', e);
                 }
+            }
+            loadCustomOptions();
+        }
+
+        function saveUserData() {
+            if (currentUser) {
+                const userDataKey = 'dispatchData_' + currentUser;
+                localStorage.setItem(userDataKey, JSON.stringify(data));
             }
         }
 
-        // Save data to localStorage
+        // Custom Portal/Courier Functions
+        function loadCustomOptions() {
+            const customPortalsKey = 'customPortals_' + currentUser;
+            const customCouriersKey = 'customCouriers_' + currentUser;
+            
+            const savedPortals = localStorage.getItem(customPortalsKey);
+            const savedCouriers = localStorage.getItem(customCouriersKey);
+            
+            if (savedPortals) customPortals = JSON.parse(savedPortals);
+            if (savedCouriers) customCouriers = JSON.parse(savedCouriers);
+            
+            updatePortalDropdown();
+            updateCourierDropdown();
+        }
+
+        function saveCustomOptions() {
+            if (currentUser) {
+                const customPortalsKey = 'customPortals_' + currentUser;
+                const customCouriersKey = 'customCouriers_' + currentUser;
+                
+                localStorage.setItem(customPortalsKey, JSON.stringify(customPortals));
+                localStorage.setItem(customCouriersKey, JSON.stringify(customCouriers));
+            }
+        }
+
+        function updatePortalDropdown() {
+            const portalSelect = document.getElementById('portal');
+            const currentValue = portalSelect.value;
+            
+            // Keep default options
+            const defaultOptions = ['Flipkart', 'Myntra', 'Meesho', 'Amazon', 'Amazon Flex', 'Snapdeal'];
+            
+            portalSelect.innerHTML = '';
+            defaultOptions.forEach(option => {
+                const opt = document.createElement('option');
+                opt.value = option;
+                opt.textContent = option;
+                portalSelect.appendChild(opt);
+            });
+            
+            // Add custom options
+            customPortals.forEach(portal => {
+                const opt = document.createElement('option');
+                opt.value = portal;
+                opt.textContent = portal + ' (Custom)';
+                portalSelect.appendChild(opt);
+            });
+            
+            // Add "Add Custom" option
+            const customOpt = document.createElement('option');
+            customOpt.value = 'custom';
+            customOpt.textContent = '➕ Add Custom Portal';
+            portalSelect.appendChild(customOpt);
+            
+            if (currentValue && currentValue !== 'custom') {
+                portalSelect.value = currentValue;
+            }
+        }
+
+        function updateCourierDropdown() {
+            const courierSelect = document.getElementById('courier');
+            const currentValue = courierSelect.value;
+            
+            // Keep default options
+            const defaultOptions = ['Ekart', 'Shadowfax', 'Delhivery', 'Xpressbees', 'Ecom Express', 'ATS', 'BlueDart'];
+            
+            courierSelect.innerHTML = '';
+            defaultOptions.forEach(option => {
+                const opt = document.createElement('option');
+                opt.value = option;
+                opt.textContent = option;
+                courierSelect.appendChild(opt);
+            });
+            
+            // Add custom options
+            customCouriers.forEach(courier => {
+                const opt = document.createElement('option');
+                opt.value = courier;
+                opt.textContent = courier + ' (Custom)';
+                courierSelect.appendChild(opt);
+            });
+            
+            // Add "Add Custom" option
+            const customOpt = document.createElement('option');
+            customOpt.value = 'custom';
+            customOpt.textContent = '➕ Add Custom Courier';
+            courierSelect.appendChild(customOpt);
+            
+            if (currentValue && currentValue !== 'custom') {
+                courierSelect.value = currentValue;
+            }
+        }
+
+        function addCustomPortal() {
+            const input = document.getElementById('custom-portal-input');
+            const portalName = input.value.trim();
+            
+            if (!portalName) {
+                showToast('Please enter portal name', 'error');
+                return;
+            }
+            
+            if (customPortals.includes(portalName)) {
+                showToast('Portal already exists', 'error');
+                return;
+            }
+            
+            customPortals.push(portalName);
+            saveCustomOptions();
+            updatePortalDropdown();
+            
+            document.getElementById('portal').value = portalName;
+            document.getElementById('custom-portal-container').classList.remove('active');
+            input.value = '';
+            
+            showToast('Portal added successfully', 'success');
+        }
+
+        function addCustomCourier() {
+            const input = document.getElementById('custom-courier-input');
+            const courierName = input.value.trim();
+            
+            if (!courierName) {
+                showToast('Please enter courier name', 'error');
+                return;
+            }
+            
+            if (customCouriers.includes(courierName)) {
+                showToast('Courier already exists', 'error');
+                return;
+            }
+            
+            customCouriers.push(courierName);
+            saveCustomOptions();
+            updateCourierDropdown();
+            
+            document.getElementById('courier').value = courierName;
+            document.getElementById('custom-courier-container').classList.remove('active');
+            input.value = '';
+            
+            showToast('Courier added successfully', 'success');
+        }
+
+        // WhatsApp Share Function
+        function shareOnWhatsApp() {
+            if (data.length === 0) {
+                showToast('No data to share', 'error');
+                return;
+            }
+
+            let message = '📦 *Dispatch Manager Report*\n';
+            message += '━━━━━━━━━━━━━━━━━━━━\n\n';
+            message += `👤 User: ${currentUser}\n`;
+            message += `📅 Date: ${new Date().toLocaleDateString()}\n`;
+            message += `📊 Total Entries: ${data.length}\n\n`;
+            
+            // Group by portal
+            const portalGroups = {};
+            data.forEach(entry => {
+                if (!portalGroups[entry.portal]) {
+                    portalGroups[entry.portal] = [];
+                }
+                portalGroups[entry.portal].push(entry);
+            });
+            
+            Object.keys(portalGroups).forEach(portal => {
+                message += `\n🏪 *${portal}* (${portalGroups[portal].length})\n`;
+                message += '─────────────────\n';
+                portalGroups[portal].forEach((entry, index) => {
+                    message += `${index + 1}. ${entry.trackingId}\n`;
+                    message += `   📦 ${entry.dispatchType} | 🚚 ${entry.courier}\n`;
+                });
+            });
+            
+            message += '\n━━━━━━━━━━━━━━━━━━━━\n';
+            message += '✨ Generated by Dispatch Manager';
+            
+            const encodedMessage = encodeURIComponent(message);
+            const whatsappUrl = `https://wa.me/?text=${encodedMessage}`;
+            
+            window.open(whatsappUrl, '_blank');
+        }
+
+        // Save data to localStorage (user-specific)
         function saveDataToStorage() {
             try {
-                localStorage.setItem('dispatchData', JSON.stringify(data));
+                saveUserData();
                 showBackupIndicator();
             } catch (e) {
                 console.error('Error saving data:', e);
@@ -635,7 +1041,7 @@
         // Initialize on page load
         window.onload = function () {
             preloadBeepSound();
-            loadDataFromStorage();
+            checkLogin();
             startAutoBackup();
         };
 
@@ -802,6 +1208,18 @@
             const courier = document.getElementById('courier').value;
             const dispatch = document.getElementById('dispatch').value;
             const trackingId = document.getElementById('tracking-id').value;
+
+            if (portal === 'custom') {
+                document.getElementById('tracking-id-error').innerText = 'Please add custom portal first.';
+                showToast('Please add custom portal first.', 'error');
+                return;
+            }
+
+            if (courier === 'custom') {
+                document.getElementById('tracking-id-error').innerText = 'Please add custom courier first.';
+                showToast('Please add custom courier first.', 'error');
+                return;
+            }
 
             if (!portal || !courier || !dispatch || !trackingId) {
                 document.getElementById('tracking-id-error').innerText = 'Please fill all fields.';
@@ -991,7 +1409,10 @@
             const confirmClear = confirm('Are you sure you want to clear all data? This cannot be undone.');
             if (confirmClear) {
                 data = [];
-                localStorage.removeItem('dispatchData');
+                if (currentUser) {
+                    const userDataKey = 'dispatchData_' + currentUser;
+                    localStorage.removeItem(userDataKey);
+                }
                 updateTable();
                 showToast('All data cleared.', 'success');
             }
@@ -1076,6 +1497,72 @@
 
         document.getElementById('dark-mode-toggle').addEventListener('click', function () {
             toggleDarkMode();
+        });
+
+        document.getElementById('login-btn').addEventListener('click', function () {
+            loginUser();
+        });
+
+        document.getElementById('register-btn').addEventListener('click', function () {
+            registerUser();
+        });
+
+        document.getElementById('logout-btn').addEventListener('click', function () {
+            logoutUser();
+        });
+
+        document.getElementById('whatsapp-share-btn').addEventListener('click', function () {
+            shareOnWhatsApp();
+        });
+
+        // Portal dropdown change
+        document.getElementById('portal').addEventListener('change', function () {
+            if (this.value === 'custom') {
+                document.getElementById('custom-portal-container').classList.add('active');
+                document.getElementById('custom-portal-input').focus();
+            } else {
+                document.getElementById('custom-portal-container').classList.remove('active');
+            }
+        });
+
+        // Courier dropdown change
+        document.getElementById('courier').addEventListener('change', function () {
+            if (this.value === 'custom') {
+                document.getElementById('custom-courier-container').classList.add('active');
+                document.getElementById('custom-courier-input').focus();
+            } else {
+                document.getElementById('custom-courier-container').classList.remove('active');
+            }
+        });
+
+        // Add custom portal button
+        document.getElementById('add-custom-portal-btn').addEventListener('click', function () {
+            addCustomPortal();
+        });
+
+        // Add custom courier button
+        document.getElementById('add-custom-courier-btn').addEventListener('click', function () {
+            addCustomCourier();
+        });
+
+        // Enter key for custom inputs
+        document.getElementById('custom-portal-input').addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') {
+                addCustomPortal();
+            }
+        });
+
+        document.getElementById('custom-courier-input').addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') {
+                addCustomCourier();
+            }
+        });
+
+        // Enter key for login
+        document.getElementById('login-password').addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') {
+                loginUser();
+            }
         });
 
         // Missing function for toggle bulk delete button
