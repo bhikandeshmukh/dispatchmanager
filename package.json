@@ -1,0 +1,19 @@
+{
+  "name": "dispatch-manager",
+  "version": "2.0.0",
+  "description": "Barcode scanning dispatch management system with PWA support",
+  "main": "index.html",
+  "scripts": {
+    "start": "npx serve .",
+    "dev": "npx serve ."
+  },
+  "keywords": [
+    "dispatch",
+    "barcode",
+    "scanner",
+    "pwa",
+    "logistics"
+  ],
+  "author": "Bhikan Deshmukh",
+  "license": "MIT"
+}
