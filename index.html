@@ -681,7 +681,8 @@
 
         <div class="bottom-buttons">
             <button id="download-btn">Download as XLSX</button>
-            <button id="whatsapp-share-btn" class="whatsapp-share-btn"><i class="fab fa-whatsapp"></i> Share on WhatsApp</button>
+            <button id="whatsapp-share-btn" class="whatsapp-share-btn"><i class="fab fa-whatsapp"></i> Share on
+                WhatsApp</button>
             <button id="clear-all-btn" class="clear-all-btn">Clear All Data</button>
             <button id="dark-mode-toggle" class="dark-mode-toggle">Toggle Dark Mode</button>
         </div>
@@ -724,7 +725,7 @@
         function registerUser() {
             const username = document.getElementById('login-username').value.trim();
             const password = document.getElementById('login-password').value.trim();
-            
+
             if (!username || !password) {
                 document.getElementById('login-error').innerText = 'Please enter username and password';
                 return;
@@ -747,7 +748,7 @@
         function loginUser() {
             const username = document.getElementById('login-username').value.trim();
             const password = document.getElementById('login-password').value.trim();
-            
+
             if (!username || !password) {
                 document.getElementById('login-error').innerText = 'Please enter username and password';
                 return;
@@ -755,7 +756,7 @@
 
             const users = loadUsers();
             const user = users.find(u => u.username === username && u.password === password);
-            
+
             if (user) {
                 currentUser = username;
                 localStorage.setItem('currentUser', username);
@@ -817,13 +818,13 @@
         function loadCustomOptions() {
             const customPortalsKey = 'customPortals_' + currentUser;
             const customCouriersKey = 'customCouriers_' + currentUser;
-            
+
             const savedPortals = localStorage.getItem(customPortalsKey);
             const savedCouriers = localStorage.getItem(customCouriersKey);
-            
+
             if (savedPortals) customPortals = JSON.parse(savedPortals);
             if (savedCouriers) customCouriers = JSON.parse(savedCouriers);
-            
+
             updatePortalDropdown();
             updateCourierDropdown();
         }
@@ -832,7 +833,7 @@
             if (currentUser) {
                 const customPortalsKey = 'customPortals_' + currentUser;
                 const customCouriersKey = 'customCouriers_' + currentUser;
-                
+
                 localStorage.setItem(customPortalsKey, JSON.stringify(customPortals));
                 localStorage.setItem(customCouriersKey, JSON.stringify(customCouriers));
             }
@@ -841,10 +842,10 @@
         function updatePortalDropdown() {
             const portalSelect = document.getElementById('portal');
             const currentValue = portalSelect.value;
-            
+
             // Keep default options
             const defaultOptions = ['Flipkart', 'Myntra', 'Meesho', 'Amazon', 'Amazon Flex', 'Snapdeal'];
-            
+
             portalSelect.innerHTML = '';
             defaultOptions.forEach(option => {
                 const opt = document.createElement('option');
@@ -852,7 +853,7 @@
                 opt.textContent = option;
                 portalSelect.appendChild(opt);
             });
-            
+
             // Add custom options
             customPortals.forEach(portal => {
                 const opt = document.createElement('option');
@@ -860,13 +861,13 @@
                 opt.textContent = portal + ' (Custom)';
                 portalSelect.appendChild(opt);
             });
-            
+
             // Add "Add Custom" option
             const customOpt = document.createElement('option');
             customOpt.value = 'custom';
             customOpt.textContent = '➕ Add Custom Portal';
             portalSelect.appendChild(customOpt);
-            
+
             if (currentValue && currentValue !== 'custom') {
                 portalSelect.value = currentValue;
             }
@@ -875,10 +876,10 @@
         function updateCourierDropdown() {
             const courierSelect = document.getElementById('courier');
             const currentValue = courierSelect.value;
-            
+
             // Keep default options
             const defaultOptions = ['Ekart', 'Shadowfax', 'Delhivery', 'Xpressbees', 'Ecom Express', 'ATS', 'BlueDart'];
-            
+
             courierSelect.innerHTML = '';
             defaultOptions.forEach(option => {
                 const opt = document.createElement('option');
@@ -886,7 +887,7 @@
                 opt.textContent = option;
                 courierSelect.appendChild(opt);
             });
-            
+
             // Add custom options
             customCouriers.forEach(courier => {
                 const opt = document.createElement('option');
@@ -894,13 +895,13 @@
                 opt.textContent = courier + ' (Custom)';
                 courierSelect.appendChild(opt);
             });
-            
+
             // Add "Add Custom" option
             const customOpt = document.createElement('option');
             customOpt.value = 'custom';
             customOpt.textContent = '➕ Add Custom Courier';
             courierSelect.appendChild(customOpt);
-            
+
             if (currentValue && currentValue !== 'custom') {
                 courierSelect.value = currentValue;
             }
@@ -909,50 +910,50 @@
         function addCustomPortal() {
             const input = document.getElementById('custom-portal-input');
             const portalName = input.value.trim();
-            
+
             if (!portalName) {
                 showToast('Please enter portal name', 'error');
                 return;
             }
-            
+
             if (customPortals.includes(portalName)) {
                 showToast('Portal already exists', 'error');
                 return;
             }
-            
+
             customPortals.push(portalName);
             saveCustomOptions();
             updatePortalDropdown();
-            
+
             document.getElementById('portal').value = portalName;
             document.getElementById('custom-portal-container').classList.remove('active');
             input.value = '';
-            
+
             showToast('Portal added successfully', 'success');
         }
 
         function addCustomCourier() {
             const input = document.getElementById('custom-courier-input');
             const courierName = input.value.trim();
-            
+
             if (!courierName) {
                 showToast('Please enter courier name', 'error');
                 return;
             }
-            
+
             if (customCouriers.includes(courierName)) {
                 showToast('Courier already exists', 'error');
                 return;
             }
-            
+
             customCouriers.push(courierName);
             saveCustomOptions();
             updateCourierDropdown();
-            
+
             document.getElementById('courier').value = courierName;
             document.getElementById('custom-courier-container').classList.remove('active');
             input.value = '';
-            
+
             showToast('Courier added successfully', 'success');
         }
 
@@ -968,7 +969,7 @@
             message += `👤 User: ${currentUser}\n`;
             message += `📅 Date: ${new Date().toLocaleDateString()}\n`;
             message += `📊 Total Entries: ${data.length}\n\n`;
-            
+
             // Group by portal
             const portalGroups = {};
             data.forEach(entry => {
@@ -977,7 +978,7 @@
                 }
                 portalGroups[entry.portal].push(entry);
             });
-            
+
             Object.keys(portalGroups).forEach(portal => {
                 message += `\n🏪 *${portal}* (${portalGroups[portal].length})\n`;
                 message += '─────────────────\n';
@@ -986,13 +987,13 @@
                     message += `   📦 ${entry.dispatchType} | 🚚 ${entry.courier}\n`;
                 });
             });
-            
+
             message += '\n━━━━━━━━━━━━━━━━━━━━\n';
             message += '✨ Generated by Dispatch Manager';
-            
+
             const encodedMessage = encodeURIComponent(message);
             const whatsappUrl = `https://wa.me/?text=${encodedMessage}`;
-            
+
             window.open(whatsappUrl, '_blank');
         }
 
