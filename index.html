@@ -537,6 +537,13 @@
             <input type="password" id="login-password" placeholder="Password">
             <button id="login-btn">Login</button>
             <button id="register-btn" style="background-color: #007bff;">Register New User</button>
+            
+            <div style="margin-top: 20px; padding: 15px; background-color: #e7f5e9; border-radius: 8px; font-size: 12px;">
+                <strong>📝 Default Users:</strong><br>
+                <code>admin / admin123</code><br>
+                <code>bhikan / bhikan123</code><br>
+                <code>user1 / user123</code>
+            </div>
         </div>
     </div>
 
@@ -713,13 +720,36 @@
         }
 
         // User Authentication Functions
+        let usersData = null;
+
+        // Load users from JSON file
+        async function loadUsersFromJSON() {
+            try {
+                const response = await fetch('users.json');
+                const data = await response.json();
+                usersData = data.users;
+                return usersData;
+            } catch (error) {
+                console.error('Error loading users.json:', error);
+                showToast('Error loading users file', 'error');
+                return [];
+            }
+        }
+
         function loadUsers() {
-            const users = localStorage.getItem('dispatchUsers');
-            return users ? JSON.parse(users) : [];
+            // First check localStorage for additional users
+            const localUsers = localStorage.getItem('dispatchUsers');
+            const additionalUsers = localUsers ? JSON.parse(localUsers) : [];
+            
+            // Combine JSON users with localStorage users
+            return [...(usersData || []), ...additionalUsers];
         }
 
         function saveUsers(users) {
-            localStorage.setItem('dispatchUsers', JSON.stringify(users));
+            // Save only new users to localStorage (not from JSON)
+            const jsonUsernames = usersData ? usersData.map(u => u.username) : [];
+            const newUsers = users.filter(u => !jsonUsernames.includes(u.username));
+            localStorage.setItem('dispatchUsers', JSON.stringify(newUsers));
         }
 
         function registerUser() {
@@ -737,7 +767,15 @@
                 return;
             }
 
-            users.push({ username, password, createdAt: new Date().toISOString() });
+            const newUser = { 
+                id: users.length + 1,
+                username, 
+                password, 
+                role: 'user',
+                createdAt: new Date().toISOString() 
+            };
+            
+            users.push(newUser);
             saveUsers(users);
             showToast('User registered successfully! Please login.', 'success');
             document.getElementById('login-username').value = '';
@@ -745,7 +783,7 @@
             document.getElementById('login-error').innerText = '';
         }
 
-        function loginUser() {
+        async function loginUser() {
             const username = document.getElementById('login-username').value.trim();
             const password = document.getElementById('login-password').value.trim();
 
@@ -754,15 +792,21 @@
                 return;
             }
 
+            // Ensure users are loaded from JSON
+            if (!usersData) {
+                await loadUsersFromJSON();
+            }
+
             const users = loadUsers();
             const user = users.find(u => u.username === username && u.password === password);
 
             if (user) {
                 currentUser = username;
                 localStorage.setItem('currentUser', username);
+                localStorage.setItem('currentUserRole', user.role || 'user');
                 document.getElementById('login-container').style.display = 'none';
                 document.getElementById('user-info').style.display = 'flex';
-                document.getElementById('current-user').innerText = username;
+                document.getElementById('current-user').innerText = username + (user.role === 'admin' ? ' (Admin)' : '');
                 loadUserData();
                 showToast('Welcome ' + username + '!', 'success');
             } else {
@@ -782,13 +826,17 @@
             }
         }
 
-        function checkLogin() {
+        async function checkLogin() {
+            // Load users from JSON first
+            await loadUsersFromJSON();
+            
             const savedUser = localStorage.getItem('currentUser');
             if (savedUser) {
                 currentUser = savedUser;
+                const userRole = localStorage.getItem('currentUserRole') || 'user';
                 document.getElementById('login-container').style.display = 'none';
                 document.getElementById('user-info').style.display = 'flex';
-                document.getElementById('current-user').innerText = savedUser;
+                document.getElementById('current-user').innerText = savedUser + (userRole === 'admin' ? ' (Admin)' : '');
                 loadUserData();
             }
         }
