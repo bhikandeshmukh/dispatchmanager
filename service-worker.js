@@ -3,25 +3,29 @@ const urlsToCache = [
   '/',
   '/index.html',
   '/manifest.json',
-  '/beep.wav',
-  'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css',
-  'https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css',
-  'https://cdnjs.cloudflare.com/ajax/libs/quagga/0.12.1/quagga.min.js',
-  'https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.1/xlsx.full.min.js',
-  'https://cdn.jsdelivr.net/npm/toastify-js'
+  '/users.json'
 ];
 
 self.addEventListener('install', event => {
   event.waitUntil(
     caches.open(CACHE_NAME)
-      .then(cache => cache.addAll(urlsToCache))
+      .then(cache => {
+        return cache.addAll(urlsToCache).catch(err => {
+          console.log('Cache addAll error:', err);
+        });
+      })
   );
+  self.skipWaiting();
 });
 
 self.addEventListener('fetch', event => {
   event.respondWith(
     caches.match(event.request)
-      .then(response => response || fetch(event.request))
+      .then(response => {
+        return response || fetch(event.request).catch(err => {
+          console.log('Fetch error:', err);
+        });
+      })
   );
 });
 
@@ -37,4 +41,5 @@ self.addEventListener('activate', event => {
       );
     })
   );
+  return self.clients.claim();
 });
