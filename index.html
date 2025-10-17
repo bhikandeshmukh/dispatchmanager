@@ -1,38 +1,42 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dispatch Manager by Bhikan Deshmukh</title>
-    
+
     <!-- Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-02GH38648H"></script>
     <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-02GH38648H');
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+        gtag('config', 'G-02GH38648H');
     </script>
 
     <!-- Default Statcounter code for https://dispatchmanager.vercel.a
     https://dispatchmanager.vercel.app/ -->
     <script type="text/javascript">
-    var sc_project=13155363; 
-    var sc_invisible=1; 
-    var sc_security="f43d6fe4"; 
+        var sc_project = 13155363;
+        var sc_invisible = 1;
+        var sc_security = "f43d6fe4"; 
     </script>
-    <script type="text/javascript"
-    src="https://www.statcounter.com/counter/counter.js" async></script>
-    <noscript><div class="statcounter"><a title="Web Analytics"
-    href="https://statcounter.com/" target="_blank"><img class="statcounter"
-    src="https://c.statcounter.com/13155363/0/f43d6fe4/1/" alt="Web Analytics"
-    referrerPolicy="no-referrer-when-downgrade"></a></div></noscript>
+    <script type="text/javascript" src="https://www.statcounter.com/counter/counter.js" async></script>
+    <noscript>
+        <div class="statcounter"><a title="Web Analytics" href="https://statcounter.com/" target="_blank"><img
+                    class="statcounter" src="https://c.statcounter.com/13155363/0/f43d6fe4/1/" alt="Web Analytics"
+                    referrerPolicy="no-referrer-when-downgrade"></a></div>
+    </noscript>
     <!-- End of Statcounter Code -->
-    
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3210573001924811"
-     crossorigin="anonymous"></script>
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#28a745">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -46,10 +50,12 @@
             backdrop-filter: blur(10px);
             transition: background-color 0.3s, color 0.3s;
         }
+
         body.dark-mode {
             background-color: #121212;
             color: #ffffff;
         }
+
         .container {
             width: 90%;
             max-width: 1200px;
@@ -62,38 +68,47 @@
             backdrop-filter: blur(10px);
             transition: background-color 0.3s;
         }
+
         body.dark-mode .container {
             background-color: rgba(0, 0, 0, 0.9);
             border-color: rgba(255, 255, 255, 0.1);
         }
+
         h1 {
             text-align: center;
             color: #333;
             margin: 0;
             font-size: 24px;
         }
+
         body.dark-mode h1 {
             color: #ffffff;
         }
+
         h6 {
             text-align: center;
             color: #333;
             margin: 5px 0 20px 0;
             font-size: 14px;
         }
+
         body.dark-mode h6 {
             color: #ffffff;
         }
+
         .form-group {
             margin-bottom: 15px;
         }
+
         .form-group label {
             font-size: 16px;
             font-weight: bold;
             margin-bottom: 5px;
             display: block;
         }
-        select, input {
+
+        select,
+        input {
             width: 100%;
             padding: 8px;
             font-size: 14px;
@@ -103,11 +118,14 @@
             box-sizing: border-box;
             transition: background-color 0.3s, color 0.3s;
         }
-        body.dark-mode select, body.dark-mode input {
+
+        body.dark-mode select,
+        body.dark-mode input {
             background-color: #333;
             color: #ffffff;
             border-color: #555;
         }
+
         button {
             padding: 10px 15px;
             background-color: #28a745;
@@ -118,58 +136,75 @@
             cursor: pointer;
             transition: background-color 0.3s;
         }
+
         button:hover {
             background-color: #218838;
         }
+
         .bulk-delete-btn {
             background-color: #dc3545;
         }
+
         .bulk-delete-btn:hover {
             background-color: #c82333;
         }
+
         .dark-mode-toggle {
             background-color: #333;
             margin-top: 10px;
         }
+
         .dark-mode-toggle:hover {
             background-color: #555;
         }
+
         .clear-all-btn {
             background-color: #ffc107;
             color: #000;
             margin-top: 10px;
         }
+
         .clear-all-btn:hover {
             background-color: #e0a800;
         }
+
         .table-container {
             margin-top: 20px;
             overflow-x: auto;
         }
+
         table {
             width: 100%;
             border-collapse: collapse;
         }
-        th, td {
+
+        th,
+        td {
             padding: 8px 12px;
             text-align: center;
             vertical-align: middle;
             border-bottom: 1px solid #ddd;
             transition: background-color 0.3s, color 0.3s;
         }
-        body.dark-mode th, body.dark-mode td {
+
+        body.dark-mode th,
+        body.dark-mode td {
             border-color: #555;
         }
+
         th {
             background-color: #f2f2f2;
         }
+
         body.dark-mode th {
             background-color: #333;
         }
+
         #scanner-container {
             margin-top: 20px;
             text-align: center;
         }
+
         #scanner {
             width: 100%;
             max-width: 100%;
@@ -179,107 +214,220 @@
             cursor: pointer;
             object-fit: cover;
         }
+
         #scanner-status {
             font-size: 16px;
             font-weight: bold;
             margin-top: 10px;
         }
+
         .error-message {
             color: red;
             font-size: 14px;
             margin-top: 5px;
         }
+
         .select-entry {
             vertical-align: middle;
         }
+
         .tracking-id-group {
             display: flex;
             align-items: center;
             gap: 10px;
         }
+
         .tracking-id-group input {
             flex: 1;
         }
+
         .tracking-id-group button {
             width: auto;
             margin-top: 0;
-            align-self: center; /* Align button vertically in the middle */
+            align-self: center;
+            /* Align button vertically in the middle */
         }
+
         .center-button {
             display: flex;
             justify-content: center;
             margin-top: 10px;
-            margin-bottom: 20px; /* Add margin to create gap */
+            margin-bottom: 20px;
+            /* Add margin to create gap */
         }
+
         .bottom-buttons {
             display: flex;
             justify-content: center;
-            gap: 10px; /* Add gap between buttons */
-            margin-top: 20px; /* Add margin to create gap */
+            gap: 10px;
+            /* Add gap between buttons */
+            margin-top: 20px;
+            /* Add margin to create gap */
         }
+
         /* Ensure all bottom buttons have the same size */
         .bottom-buttons button {
-            flex: 1; /* Make buttons share available space equally */
-            max-width: 200px; /* Optional: Set a max-width to prevent buttons from becoming too wide */
+            flex: 1;
+            /* Make buttons share available space equally */
+            max-width: 200px;
+            /* Optional: Set a max-width to prevent buttons from becoming too wide */
         }
-        
-        /* Ad container styles */
-        .ad-container {
-            text-align: center;
+
+        /* Duplicate entry highlight */
+        .duplicate-entry {
+            background-color: #fff3cd !important;
+            animation: pulse 1s ease-in-out;
+        }
+
+        body.dark-mode .duplicate-entry {
+            background-color: #664d03 !important;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.7;
+            }
+        }
+
+        /* Edit mode styles */
+        .edit-mode input {
+            border: 2px solid #28a745;
+            background-color: #e7f5e9;
+        }
+
+        body.dark-mode .edit-mode input {
+            background-color: #1a3a1f;
+        }
+
+        /* Action buttons in table */
+        .action-buttons {
+            display: flex;
+            gap: 5px;
+            justify-content: center;
+        }
+
+        .action-buttons button {
+            padding: 5px 10px;
+            font-size: 12px;
+            margin: 0;
+        }
+
+        .edit-btn {
+            background-color: #007bff;
+        }
+
+        .edit-btn:hover {
+            background-color: #0056b3;
+        }
+
+        .save-edit-btn {
+            background-color: #28a745;
+        }
+
+        .cancel-edit-btn {
+            background-color: #6c757d;
+        }
+
+        /* Bulk edit section */
+        .bulk-edit-section {
+            display: none;
             margin: 20px 0;
-            padding: 10px;
-            background-color: rgba(240, 240, 240, 0.5);
+            padding: 15px;
+            background-color: #e7f5e9;
             border-radius: 8px;
-            border: 1px dashed #ccc;
+            border: 2px solid #28a745;
         }
-        body.dark-mode .ad-container {
-            background-color: rgba(50, 50, 50, 0.5);
-            border-color: #555;
+
+        body.dark-mode .bulk-edit-section {
+            background-color: #1a3a1f;
         }
-        
+
+        .bulk-edit-section.active {
+            display: block;
+        }
+
+        /* Camera error message */
+        .camera-error {
+            background-color: #f8d7da;
+            color: #721c24;
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+            display: none;
+        }
+
+        body.dark-mode .camera-error {
+            background-color: #5a1a1a;
+            color: #f8d7da;
+        }
+
+        /* Touch feedback */
+        button:active {
+            transform: scale(0.95);
+        }
+
+        /* Backup indicator */
+        .backup-indicator {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #28a745;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 20px;
+            font-size: 12px;
+            display: none;
+            z-index: 1000;
+        }
+
+        body.dark-mode .backup-indicator {
+            background-color: #1a5928;
+        }
+
+
         @media (max-width: 768px) {
             h1 {
                 font-size: 20px;
             }
+
             h6 {
                 font-size: 12px;
             }
+
             .container {
                 width: 95%;
                 padding: 15px;
             }
-            select, input {
+
+            select,
+            input {
                 font-size: 12px;
             }
+
             button {
                 font-size: 14px;
             }
-            th, td {
+
+            th,
+            td {
                 padding: 6px 8px;
                 font-size: 12px;
             }
         }
     </style>
 </head>
+
 <body>
 
     <div class="container">
         <h1>Dispatch Manager</h1>
         <h6>By Bhikan Deshmukh</h6>
-
-        <!-- Header Ad Placement -->
-        <div class="ad-container">
-            <!-- dispatch manager ad unit 1 -->
-            <ins class="adsbygoogle"
-                 style="display:block"
-                 data-ad-client="ca-pub-3210573001924811"
-                 data-ad-slot="3989273864"
-                 data-ad-format="auto"
-                 data-full-width-responsive="true"></ins>
-            <script>
-                 (adsbygoogle = window.adsbygoogle || []).push({});
-            </script>
-        </div>
 
         <div class="form-group">
             <label for="portal">Select Portal:</label>
@@ -324,22 +472,50 @@
             <div id="tracking-id-error" class="error-message"></div>
         </div>
 
-        <!-- Mid-Content Ad Placement -->
-        <div class="ad-container">
-            <!-- dispatch manager ad unit 1 -->
-            <ins class="adsbygoogle"
-                 style="display:block"
-                 data-ad-client="ca-pub-3210573001924811"
-                 data-ad-slot="3989273864"
-                 data-ad-format="auto"
-                 data-full-width-responsive="true"></ins>
-            <script>
-                 (adsbygoogle = window.adsbygoogle || []).push({});
-            </script>
+        <!-- Bulk Edit Section -->
+        <div class="bulk-edit-section" id="bulk-edit-section">
+            <h3>Bulk Edit Selected Entries</h3>
+            <div class="form-group">
+                <label for="bulk-portal">Change Portal:</label>
+                <select id="bulk-portal">
+                    <option value="">-- No Change --</option>
+                    <option value="Flipkart">Flipkart</option>
+                    <option value="Myntra">Myntra</option>
+                    <option value="Meesho">Meesho</option>
+                    <option value="Amazon">Amazon</option>
+                    <option value="Amazon Flex">Amazon Flex</option>
+                    <option value="Snapdeal">Snapdeal</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="bulk-courier">Change Courier:</label>
+                <select id="bulk-courier">
+                    <option value="">-- No Change --</option>
+                    <option value="Ekart">Ekart</option>
+                    <option value="Shadowfax">Shadowfax</option>
+                    <option value="Delhivery">Delhivery</option>
+                    <option value="Xpressbees">Xpressbees</option>
+                    <option value="Ecom Express">Ecom Express</option>
+                    <option value="ATS">ATS</option>
+                    <option value="BlueDart">BlueDart</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="bulk-dispatch">Change Scan Type:</label>
+                <select id="bulk-dispatch">
+                    <option value="">-- No Change --</option>
+                    <option value="Dispatch">Dispatch</option>
+                    <option value="Return">Return</option>
+                    <option value="Cancel">Cancel</option>
+                </select>
+            </div>
+            <button id="apply-bulk-edit-btn">Apply Changes</button>
+            <button id="cancel-bulk-edit-btn" class="cancel-edit-btn">Cancel</button>
         </div>
 
         <div id="scanner-container">
             <h3>Camera Live Feed</h3>
+            <div class="camera-error" id="camera-error"></div>
             <video id="scanner" autoplay></video>
             <p id="scanner-status">Scanning is stopped. Click to start scanning.</p>
         </div>
@@ -348,7 +524,10 @@
             <h2>Live Scanned Data:</h2>
             <div class="center-button">
                 <button id="bulk-delete-btn" class="bulk-delete-btn">
-                    <i class="fas fa-trash"></i> Delete
+                    <i class="fas fa-trash"></i> Delete Selected
+                </button>
+                <button id="bulk-edit-btn" style="background-color: #007bff; margin-left: 10px;">
+                    <i class="fas fa-edit"></i> Edit Selected
                 </button>
             </div>
             <table id="data-table">
@@ -360,26 +539,13 @@
                         <th>Dispatch Type</th>
                         <th>Tracking ID</th>
                         <th>Courier</th>
+                        <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
                     <!-- Data will be populated here -->
                 </tbody>
             </table>
-        </div>
-
-        <!-- Before Footer Ad Placement -->
-        <div class="ad-container">
-            <!-- dispatch manager ad unit 1 -->
-            <ins class="adsbygoogle"
-                 style="display:block"
-                 data-ad-client="ca-pub-3210573001924811"
-                 data-ad-slot="3989273864"
-                 data-ad-format="auto"
-                 data-full-width-responsive="true"></ins>
-            <script>
-                 (adsbygoogle = window.adsbygoogle || []).push({});
-            </script>
         </div>
 
         <div class="bottom-buttons">
@@ -389,13 +555,69 @@
         </div>
     </div>
 
+    <div class="backup-indicator" id="backup-indicator">
+        <i class="fas fa-check-circle"></i> Auto-saved
+    </div>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/quagga/0.12.1/quagga.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.1/xlsx.full.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
     <script>
         let data = [];
         let isScannerActive = false;
-        let beepSound; // Variable to hold the beep sound
+        let beepSound;
+        let editingIndex = null;
+        let autoBackupInterval = null;
+
+        // Register Service Worker for PWA
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('/service-worker.js')
+                .then(reg => console.log('Service Worker registered'))
+                .catch(err => console.log('Service Worker registration failed'));
+        }
+
+        // Load data from localStorage on page load
+        function loadDataFromStorage() {
+            const savedData = localStorage.getItem('dispatchData');
+            if (savedData) {
+                try {
+                    data = JSON.parse(savedData);
+                    updateTable();
+                    showToast('Data loaded from storage', 'success');
+                } catch (e) {
+                    console.error('Error loading data:', e);
+                }
+            }
+        }
+
+        // Save data to localStorage
+        function saveDataToStorage() {
+            try {
+                localStorage.setItem('dispatchData', JSON.stringify(data));
+                showBackupIndicator();
+            } catch (e) {
+                console.error('Error saving data:', e);
+                showToast('Error saving data', 'error');
+            }
+        }
+
+        // Show backup indicator
+        function showBackupIndicator() {
+            const indicator = document.getElementById('backup-indicator');
+            indicator.style.display = 'block';
+            setTimeout(() => {
+                indicator.style.display = 'none';
+            }, 2000);
+        }
+
+        // Auto-backup every 30 seconds
+        function startAutoBackup() {
+            autoBackupInterval = setInterval(() => {
+                if (data.length > 0) {
+                    saveDataToStorage();
+                }
+            }, 30000);
+        }
 
         // Preload the beep sound
         function preloadBeepSound() {
@@ -410,8 +632,12 @@
             }
         }
 
-        // Preload the beep sound when the page loads
-        window.onload = preloadBeepSound;
+        // Initialize on page load
+        window.onload = function () {
+            preloadBeepSound();
+            loadDataFromStorage();
+            startAutoBackup();
+        };
 
         // Function to show toast notifications
         function showToast(message, type = 'success') {
@@ -425,21 +651,40 @@
             }).showToast();
         }
 
+        // Show camera error
+        function showCameraError(message) {
+            const errorDiv = document.getElementById('camera-error');
+            errorDiv.textContent = message;
+            errorDiv.style.display = 'block';
+            setTimeout(() => {
+                errorDiv.style.display = 'none';
+            }, 5000);
+        }
+
         // Function to get back camera (rear camera)
         function getBackCamera() {
             return new Promise((resolve, reject) => {
+                if (!navigator.mediaDevices || !navigator.mediaDevices.enumerateDevices) {
+                    reject('Camera API not supported on this device');
+                    return;
+                }
+
                 navigator.mediaDevices.enumerateDevices()
                     .then(devices => {
                         const videoDevices = devices.filter(device => device.kind === 'videoinput');
+                        if (videoDevices.length === 0) {
+                            reject('No camera found on this device');
+                            return;
+                        }
                         const backCamera = videoDevices.find(device => device.label.toLowerCase().includes('back'));
                         if (backCamera) {
                             resolve(backCamera.deviceId);
                         } else {
-                            reject('Back camera not found.');
+                            resolve(videoDevices[0].deviceId);
                         }
                     })
                     .catch(err => {
-                        reject(err);
+                        reject('Error accessing camera: ' + err.message);
                     });
             });
         }
@@ -450,11 +695,11 @@
                 .then(deviceId => {
                     const constraints = {
                         video: {
-                            deviceId: { exact: deviceId },
-                            facingMode: { exact: "environment" },
-                            width: { ideal: 640 }, // Max FPS and resolution
+                            deviceId: deviceId ? { exact: deviceId } : true,
+                            facingMode: "environment",
+                            width: { ideal: 640 },
                             height: { ideal: 480 },
-                            frameRate: { ideal: 60 } // Max FPS
+                            frameRate: { ideal: 60 }
                         }
                     };
                     return navigator.mediaDevices.getUserMedia(constraints);
@@ -468,8 +713,17 @@
                 })
                 .catch(err => {
                     console.error(err);
-                    document.getElementById('scanner-status').innerText = 'Error accessing camera. Please try again.';
-                    showToast('Error accessing camera. Please try again.', 'error');
+                    let errorMessage = 'Camera access denied or unavailable';
+                    if (err.name === 'NotAllowedError') {
+                        errorMessage = 'Camera permission denied. Please allow camera access in browser settings.';
+                    } else if (err.name === 'NotFoundError') {
+                        errorMessage = 'No camera found on this device.';
+                    } else if (err.name === 'NotReadableError') {
+                        errorMessage = 'Camera is already in use by another application.';
+                    }
+                    document.getElementById('scanner-status').innerText = 'Camera error. Click to retry.';
+                    showCameraError(errorMessage);
+                    showToast(errorMessage, 'error');
                 });
         }
 
@@ -492,7 +746,7 @@
                 },
                 locate: true, // Improve barcode detection accuracy
                 numOfWorkers: 4, // Use multiple workers for better performance
-            }, function(err) {
+            }, function (err) {
                 if (err) {
                     console.error(err);
                     document.getElementById('scanner-status').innerText = 'Error initializing scanner.';
@@ -504,7 +758,7 @@
             });
 
             // Event listener for barcode found
-            Quagga.onDetected(function(result) {
+            Quagga.onDetected(function (result) {
                 const barcode = result.codeResult.code;
                 if (barcode && barcode.trim() !== "") { // Ensure valid barcode
                     document.getElementById('tracking-id').value = barcode; // Set scanned barcode in tracking ID field
@@ -527,6 +781,12 @@
         // Check for duplicate barcode
         function isDuplicateBarcode(barcode) {
             return data.some(entry => entry.trackingId === barcode);
+        }
+
+        // Find duplicate entries
+        function findDuplicateIndices(barcode) {
+            return data.map((entry, index) => entry.trackingId === barcode ? index : -1)
+                .filter(index => index !== -1);
         }
 
         // Stop the scanner
@@ -560,32 +820,89 @@
             };
 
             data.push(newEntry);
+            saveDataToStorage();
             updateTable();
-            document.getElementById('tracking-id').value = ''; // Clear input after save
-            document.getElementById('tracking-id').focus(); // Auto-focus on tracking ID field
+            document.getElementById('tracking-id').value = '';
+            document.getElementById('tracking-id').focus();
             document.getElementById('scanner-status').innerText = 'Scanning is active. Click to scan.';
         }
 
         // Update the table with new data
         function updateTable() {
             const tableBody = document.getElementById('data-table').getElementsByTagName('tbody')[0];
-            tableBody.innerHTML = ''; // Clear existing table data
+            tableBody.innerHTML = '';
+
+            // Track duplicate tracking IDs
+            const trackingIdCount = {};
+            data.forEach(entry => {
+                trackingIdCount[entry.trackingId] = (trackingIdCount[entry.trackingId] || 0) + 1;
+            });
 
             data.forEach((entry, index) => {
                 const row = tableBody.insertRow();
-                row.innerHTML = `
-                    <td><input type="checkbox" class="select-entry" data-index="${index}"></td>
-                    <td>${entry.date}</td>
-                    <td>${entry.portal}</td>
-                    <td>${entry.dispatchType}</td>
-                    <td>${entry.trackingId}</td>
-                    <td>${entry.courier}</td>
-                `;
+                const isDuplicate = trackingIdCount[entry.trackingId] > 1;
+
+                if (isDuplicate) {
+                    row.classList.add('duplicate-entry');
+                }
+
+                if (editingIndex === index) {
+                    row.innerHTML = `
+                        <td><input type="checkbox" class="select-entry" data-index="${index}"></td>
+                        <td>${entry.date}</td>
+                        <td><input type="text" value="${entry.portal}" id="edit-portal-${index}" class="edit-mode"></td>
+                        <td><input type="text" value="${entry.dispatchType}" id="edit-dispatch-${index}" class="edit-mode"></td>
+                        <td><input type="text" value="${entry.trackingId}" id="edit-tracking-${index}" class="edit-mode"></td>
+                        <td><input type="text" value="${entry.courier}" id="edit-courier-${index}" class="edit-mode"></td>
+                        <td class="action-buttons">
+                            <button class="save-edit-btn" onclick="saveEdit(${index})"><i class="fas fa-save"></i></button>
+                            <button class="cancel-edit-btn" onclick="cancelEdit()"><i class="fas fa-times"></i></button>
+                        </td>
+                    `;
+                } else {
+                    row.innerHTML = `
+                        <td><input type="checkbox" class="select-entry" data-index="${index}"></td>
+                        <td>${entry.date}</td>
+                        <td>${entry.portal}</td>
+                        <td>${entry.dispatchType}</td>
+                        <td>${entry.trackingId}${isDuplicate ? ' <i class="fas fa-exclamation-triangle" style="color: #ff9800;" title="Duplicate"></i>' : ''}</td>
+                        <td>${entry.courier}</td>
+                        <td class="action-buttons">
+                            <button class="edit-btn" onclick="editEntry(${index})"><i class="fas fa-edit"></i></button>
+                        </td>
+                    `;
+                }
             });
 
-            // Show/hide bulk delete button
             const bulkDeleteBtn = document.getElementById('bulk-delete-btn');
-            bulkDeleteBtn.style.display = data.length > 0 ? 'block' : 'none';
+            const bulkEditBtn = document.getElementById('bulk-edit-btn');
+            bulkDeleteBtn.style.display = data.length > 0 ? 'inline-block' : 'none';
+            bulkEditBtn.style.display = data.length > 0 ? 'inline-block' : 'none';
+        }
+
+        // Edit single entry
+        function editEntry(index) {
+            editingIndex = index;
+            updateTable();
+        }
+
+        // Save edited entry
+        function saveEdit(index) {
+            data[index].portal = document.getElementById(`edit-portal-${index}`).value;
+            data[index].dispatchType = document.getElementById(`edit-dispatch-${index}`).value;
+            data[index].trackingId = document.getElementById(`edit-tracking-${index}`).value;
+            data[index].courier = document.getElementById(`edit-courier-${index}`).value;
+
+            editingIndex = null;
+            saveDataToStorage();
+            updateTable();
+            showToast('Entry updated successfully', 'success');
+        }
+
+        // Cancel edit
+        function cancelEdit() {
+            editingIndex = null;
+            updateTable();
         }
 
         // Delete selected entries in bulk
@@ -596,16 +913,72 @@
                 return;
             }
 
-            // Confirmation popup
-            const confirmDelete = confirm('Are you sure you want to delete the selected entries?');
+            const confirmDelete = confirm(`Are you sure you want to delete ${selectedEntries.length} entries?`);
             if (confirmDelete) {
-                selectedEntries.forEach(entry => {
-                    const index = entry.getAttribute('data-index');
+                const indicesToDelete = Array.from(selectedEntries)
+                    .map(entry => parseInt(entry.getAttribute('data-index')))
+                    .sort((a, b) => b - a);
+
+                indicesToDelete.forEach(index => {
                     data.splice(index, 1);
                 });
+
+                saveDataToStorage();
                 updateTable();
                 showToast('Selected entries deleted.', 'success');
             }
+        }
+
+        // Bulk edit selected entries
+        function bulkEditEntries() {
+            const selectedEntries = document.querySelectorAll('.select-entry:checked');
+            if (selectedEntries.length === 0) {
+                showToast('No entries selected.', 'error');
+                return;
+            }
+
+            const bulkEditSection = document.getElementById('bulk-edit-section');
+            bulkEditSection.classList.add('active');
+            bulkEditSection.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Apply bulk edit
+        function applyBulkEdit() {
+            const selectedEntries = document.querySelectorAll('.select-entry:checked');
+            const bulkPortal = document.getElementById('bulk-portal').value;
+            const bulkCourier = document.getElementById('bulk-courier').value;
+            const bulkDispatch = document.getElementById('bulk-dispatch').value;
+
+            if (!bulkPortal && !bulkCourier && !bulkDispatch) {
+                showToast('Please select at least one field to update', 'error');
+                return;
+            }
+
+            let updateCount = 0;
+            selectedEntries.forEach(entry => {
+                const index = parseInt(entry.getAttribute('data-index'));
+                if (bulkPortal) data[index].portal = bulkPortal;
+                if (bulkCourier) data[index].courier = bulkCourier;
+                if (bulkDispatch) data[index].dispatchType = bulkDispatch;
+                updateCount++;
+            });
+
+            document.getElementById('bulk-edit-section').classList.remove('active');
+            document.getElementById('bulk-portal').value = '';
+            document.getElementById('bulk-courier').value = '';
+            document.getElementById('bulk-dispatch').value = '';
+
+            saveDataToStorage();
+            updateTable();
+            showToast(`${updateCount} entries updated successfully`, 'success');
+        }
+
+        // Cancel bulk edit
+        function cancelBulkEdit() {
+            document.getElementById('bulk-edit-section').classList.remove('active');
+            document.getElementById('bulk-portal').value = '';
+            document.getElementById('bulk-courier').value = '';
+            document.getElementById('bulk-dispatch').value = '';
         }
 
         // Clear all data
@@ -615,10 +988,10 @@
                 return;
             }
 
-            // Confirmation popup
-            const confirmClear = confirm('Are you sure you want to clear all data?');
+            const confirmClear = confirm('Are you sure you want to clear all data? This cannot be undone.');
             if (confirmClear) {
                 data = [];
+                localStorage.removeItem('dispatchData');
                 updateTable();
                 showToast('All data cleared.', 'success');
             }
@@ -636,7 +1009,7 @@
         }
 
         // Event listeners
-        document.getElementById('select-all').addEventListener('click', function() {
+        document.getElementById('select-all').addEventListener('click', function () {
             const selectAll = this.checked;
             document.querySelectorAll('.select-entry').forEach(entry => {
                 entry.checked = selectAll;
@@ -644,31 +1017,31 @@
             toggleBulkDeleteButton();
         });
 
-        document.addEventListener('change', function(e) {
+        document.addEventListener('change', function (e) {
             if (e.target.classList.contains('select-entry')) {
                 toggleBulkDeleteButton();
             }
         });
 
-        document.getElementById('scanner').addEventListener('click', function() {
+        document.getElementById('scanner').addEventListener('click', function () {
             if (!isScannerActive) {
                 enableCamera();
                 initBarcodeScanner();
             }
         });
 
-        document.getElementById('save-btn').addEventListener('click', function() {
+        document.getElementById('save-btn').addEventListener('click', function () {
             saveData();
         });
 
         // Link Enter key to Save button
-        document.getElementById('tracking-id').addEventListener('keypress', function(e) {
+        document.getElementById('tracking-id').addEventListener('keypress', function (e) {
             if (e.key === 'Enter') {
                 saveData();
             }
         });
 
-        document.getElementById('download-btn').addEventListener('click', function() {
+        document.getElementById('download-btn').addEventListener('click', function () {
             if (data.length === 0) {
                 showToast('No data to download.', 'error');
                 return;
@@ -681,15 +1054,27 @@
             showToast('Data downloaded successfully.', 'success');
         });
 
-        document.getElementById('bulk-delete-btn').addEventListener('click', function() {
+        document.getElementById('bulk-delete-btn').addEventListener('click', function () {
             deleteSelectedEntries();
         });
 
-        document.getElementById('clear-all-btn').addEventListener('click', function() {
+        document.getElementById('bulk-edit-btn').addEventListener('click', function () {
+            bulkEditEntries();
+        });
+
+        document.getElementById('apply-bulk-edit-btn').addEventListener('click', function () {
+            applyBulkEdit();
+        });
+
+        document.getElementById('cancel-bulk-edit-btn').addEventListener('click', function () {
+            cancelBulkEdit();
+        });
+
+        document.getElementById('clear-all-btn').addEventListener('click', function () {
             clearAllData();
         });
 
-        document.getElementById('dark-mode-toggle').addEventListener('click', function() {
+        document.getElementById('dark-mode-toggle').addEventListener('click', function () {
             toggleDarkMode();
         });
 
@@ -698,7 +1083,7 @@
             const selectedEntries = document.querySelectorAll('.select-entry:checked');
             const bulkDeleteBtn = document.getElementById('bulk-delete-btn');
             const selectAllCheckbox = document.getElementById('select-all');
-            
+
             // Update select all checkbox state
             const allEntries = document.querySelectorAll('.select-entry');
             selectAllCheckbox.indeterminate = selectedEntries.length > 0 && selectedEntries.length < allEntries.length;
@@ -707,4 +1092,5 @@
     </script>
 
 </body>
+
 </html>
