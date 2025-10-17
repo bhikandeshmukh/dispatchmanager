@@ -537,8 +537,9 @@
             <input type="password" id="login-password" placeholder="Password">
             <button id="login-btn">Login</button>
             <button id="register-btn" style="background-color: #007bff;">Register New User</button>
-            
-            <div style="margin-top: 20px; padding: 15px; background-color: #e7f5e9; border-radius: 8px; font-size: 12px;">
+
+            <div
+                style="margin-top: 20px; padding: 15px; background-color: #e7f5e9; border-radius: 8px; font-size: 12px;">
                 <strong>📝 Default Users:</strong><br>
                 <code>admin / admin123</code><br>
                 <code>bhikan / bhikan123</code><br>
@@ -740,7 +741,7 @@
             // First check localStorage for additional users
             const localUsers = localStorage.getItem('dispatchUsers');
             const additionalUsers = localUsers ? JSON.parse(localUsers) : [];
-            
+
             // Combine JSON users with localStorage users
             return [...(usersData || []), ...additionalUsers];
         }
@@ -767,14 +768,14 @@
                 return;
             }
 
-            const newUser = { 
+            const newUser = {
                 id: users.length + 1,
-                username, 
-                password, 
+                username,
+                password,
                 role: 'user',
-                createdAt: new Date().toISOString() 
+                createdAt: new Date().toISOString()
             };
-            
+
             users.push(newUser);
             saveUsers(users);
             showToast('User registered successfully! Please login.', 'success');
@@ -829,7 +830,7 @@
         async function checkLogin() {
             // Load users from JSON first
             await loadUsersFromJSON();
-            
+
             const savedUser = localStorage.getItem('currentUser');
             if (savedUser) {
                 currentUser = savedUser;
