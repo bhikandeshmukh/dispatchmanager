@@ -3,7 +3,7 @@
     {
       "id": 1,
       "username": "admin",
-      "password": "admin",
+      "password": "admin1",
       "role": "admin",
       "createdAt": "2025-10-17T10:00:00.000Z"
     },
